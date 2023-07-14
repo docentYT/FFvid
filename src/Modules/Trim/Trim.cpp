@@ -16,6 +16,8 @@
 #include <wx/filedlg.h>
 #include <wx/log.h>
 
+#include "../../Controls/FilePathCtrl.h"
+
 static const wxString WILDCARD = "Video|*";
 
 wxPanel* Trim::createPanel(wxNotebook* parent) {
@@ -23,16 +25,7 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	/* Input file */
-	Trim::inputFilePathCtrl = new wxTextCtrl(mainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(600, -1));
-	wxButton* inputFilePathButton = new wxButton(mainPanel, wxID_ANY, "Browse");
-	inputFilePathButton->Bind(wxEVT_BUTTON, &Trim::selectInput, this);
-
-	wxStaticBoxSizer* inputFilePathSizer = new wxStaticBoxSizer(wxHORIZONTAL, mainPanel, "Input file");
-	inputFilePathSizer->AddStretchSpacer();
-	inputFilePathSizer->Add(inputFilePathCtrl, 0, wxALL, 10);
-	inputFilePathSizer->AddStretchSpacer();
-	inputFilePathSizer->Add(inputFilePathButton, 0, wxALL, 10);
-	inputFilePathSizer->AddStretchSpacer();
+	Trim::inputFilePathCtrl = new FilePathCtrl(mainPanel, "Input file", WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
 	/* Settings */
 	wxStaticText* startTimeLabel = new wxStaticText(mainPanel, wxID_ANY, "Start time (HH:MM:SS):");
@@ -53,16 +46,7 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	settingsBoxSizer->Add(settingsSizer);
 
 	/* Output file */
-	Trim::outputFilePathCtrl = new wxTextCtrl(mainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(600, -1));
-	wxButton* outputFilePathButton = new wxButton(mainPanel, wxID_ANY, "Browse");
-	outputFilePathButton->Bind(wxEVT_BUTTON, &Trim::selectOutput, this);
-
-	wxStaticBoxSizer* outputFilePathSizer = new wxStaticBoxSizer(wxHORIZONTAL, mainPanel, "Output file");
-	outputFilePathSizer->AddStretchSpacer();
-	outputFilePathSizer->Add(outputFilePathCtrl, 0, wxALL, 10);
-	outputFilePathSizer->AddStretchSpacer();
-	outputFilePathSizer->Add(outputFilePathButton, 0, wxALL, 10);
-	outputFilePathSizer->AddStretchSpacer();
+	Trim::outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
 
 	/* Progress gague and trim button */
 	Trim::progressGauge = new wxGauge(mainPanel, wxID_ANY, 100, wxDefaultPosition, wxSize(600, -1));
@@ -77,9 +61,9 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	trimSizer->AddStretchSpacer();
 
 	/* Main sizer setup */
-	mainSizer->Add(inputFilePathSizer);
+	mainSizer->Add(Trim::inputFilePathCtrl->sizer);
 	mainSizer->Add(settingsBoxSizer);
-	mainSizer->Add(outputFilePathSizer);
+	mainSizer->Add(Trim::outputFilePathCtrl->sizer);
 	mainSizer->AddStretchSpacer();
 	mainSizer->Add(trimSizer, 0, wxLEFT | wxRIGHT, 15);
 	mainPanel->SetSizerAndFit(mainSizer);
@@ -88,25 +72,13 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	return mainPanel;
 }
 
-void Trim::selectInput(wxCommandEvent& evt) {
-	wxFileDialog dialog(Trim::panel, wxEmptyString, wxEmptyString, wxEmptyString, WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-	if (dialog.ShowModal() == wxID_CANCEL) return;
-	Trim::inputFilePathCtrl->SetValue(dialog.GetPath());
-}
-
-void Trim::selectOutput(wxCommandEvent& evt) {
-	wxFileDialog dialog(Trim::panel, wxEmptyString, wxEmptyString, wxEmptyString, WILDCARD, wxFD_SAVE);
-	if (dialog.ShowModal() == wxID_CANCEL) return;
-	Trim::outputFilePathCtrl->SetValue(dialog.GetPath());
-}
-
 void Trim::trimVideo(wxCommandEvent& evt) {
-	wxString inputFilePath = Trim::inputFilePathCtrl->GetValue();
+	wxString inputFilePath = Trim::inputFilePathCtrl->textCtrl->GetValue();
 	if (inputFilePath == wxEmptyString) {
 		wxMessageBox("Please specify input file.", "Invalid input");
 		return;
 	}
-	wxString outputFilePath = Trim::outputFilePathCtrl->GetValue();
+	wxString outputFilePath = Trim::outputFilePathCtrl->textCtrl->GetValue();
 	if (outputFilePath == wxEmptyString) {
 		wxMessageBox("Please specify output file.", "Invalid output");
 		return;

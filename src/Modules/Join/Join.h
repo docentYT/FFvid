@@ -8,6 +8,8 @@
 #include <wx/gauge.h>
 #include <wx/checkbox.h>
 
+#include "../../Controls/FilePathCtrl.h"
+
 class Join : public Module {
 public:
 	wxPanel* panel;
@@ -18,12 +20,11 @@ private:
 	wxListView* inputFilesList;
 	wxGauge* progressGauge;
 	wxCheckBox* reencodeCheckBox;
-	wxTextCtrl* outputFilePathCtrl;
+	FilePathCtrl* outputFilePathCtrl;
 	int draggedIndex;
 	void selectInputFiles(wxCommandEvent& evt);
 	void moveFileUp(wxCommandEvent& evt);
 	void moveFileDown(wxCommandEvent& evt);
 	void removeItem(wxCommandEvent& evt);
-	void selectOutput(wxCommandEvent& evt);
 	void joinVideo(wxCommandEvent& evt);
 };

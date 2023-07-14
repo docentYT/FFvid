@@ -142,7 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\App.h" />
-    <ClInclude Include="src\Controls\FilePath.h" />
+    <ClInclude Include="src\Controls\FilePathCtrl.h" />
     <ClInclude Include="src\Modules\Join\Join.h" />
     <ClInclude Include="src\MainFrame.h" />
     <ClInclude Include="src\Modules\Module.h" />
@@ -154,6 +154,7 @@
   <ItemGroup>
     <Image Include="src\Modules\Join\bit.bmp" />
     <Image Include="src\Modules\Join\down.bmp" />
+    <Image Include="src\Modules\Join\up.bmp" />
     <Image Include="x64\Debug\bit.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

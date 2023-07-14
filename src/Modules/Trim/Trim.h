@@ -3,6 +3,7 @@
 #include <wx/textctrl.h>
 #include <wx/gauge.h>
 #include "../Module.h"
+#include "../../Controls/FilePathCtrl.h"
 
 class Trim : public Module {
 public:
@@ -11,13 +12,11 @@ public:
 	wxPanel* createPanel(wxNotebook* parent);
 
 private:
-	wxTextCtrl* inputFilePathCtrl;
-	wxTextCtrl* outputFilePathCtrl;
+	FilePathCtrl* inputFilePathCtrl;
+	FilePathCtrl* outputFilePathCtrl;
 	wxTextCtrl* startTimeCtrl;
 	wxTextCtrl* endTimeCtrl;
 	wxGauge* progressGauge;
-	void selectInput(wxCommandEvent& evt);
-	void selectOutput(wxCommandEvent& evt);
 	void trimVideo(wxCommandEvent& evt);
 	void getTimeFromString(wxString& string, int& h, int& m, int& s);
 };

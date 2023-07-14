@@ -14,6 +14,8 @@
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
 
+#include "../../Controls/FilePathCtrl.h"
+
 static const wxString WILDCARD = "Video|*";
 
 wxPanel* Join::createPanel(wxNotebook* parent) {
@@ -57,16 +59,7 @@ wxPanel* Join::createPanel(wxNotebook* parent) {
 	inputFilesSizer->Add(listCtrlButtonsSizer);
 
 	/* Output file */
-	Join::outputFilePathCtrl = new wxTextCtrl(mainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(600, -1));
-	wxButton* outputFilePathButton = new wxButton(mainPanel, wxID_ANY, "Browse");
-	outputFilePathButton->Bind(wxEVT_BUTTON, &Join::selectOutput, this);
-
-	wxStaticBoxSizer* outputFilePathSizer = new wxStaticBoxSizer(wxHORIZONTAL, mainPanel, "Output file");
-	outputFilePathSizer->AddStretchSpacer();
-	outputFilePathSizer->Add(outputFilePathCtrl, 0, wxALL, 10);
-	outputFilePathSizer->AddStretchSpacer();
-	outputFilePathSizer->Add(outputFilePathButton, 0, wxALL, 10);
-	outputFilePathSizer->AddStretchSpacer();
+	Join::outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
 
 	/* Progress gague and join button */
 	Join::progressGauge = new wxGauge(mainPanel, wxID_ANY, 100, wxDefaultPosition, wxSize(300, -1));
@@ -85,7 +78,7 @@ wxPanel* Join::createPanel(wxNotebook* parent) {
 
 	/* Main sizer setup */
 	mainSizer->Add(inputFilesSizer);
-	mainSizer->Add(outputFilePathSizer);
+	mainSizer->Add(outputFilePathCtrl->sizer);
 	mainSizer->AddStretchSpacer();
 	mainSizer->Add(joinSizer, 0, wxLEFT | wxRIGHT, 15);
 	mainPanel->SetSizerAndFit(mainSizer);
@@ -150,19 +143,13 @@ void Join::removeItem(wxCommandEvent& evt) {
 	Join::inputFilesList->Thaw();
 }
 
-void Join::selectOutput(wxCommandEvent& evt) {
-	wxFileDialog dialog(Join::panel, wxEmptyString, wxEmptyString, wxEmptyString, WILDCARD, wxFD_SAVE);
-	if (dialog.ShowModal() == wxID_CANCEL) return;
-	Join::outputFilePathCtrl->SetValue(dialog.GetPath());
-}
-
 void Join::joinVideo(wxCommandEvent& evt) {
 	if (Join::inputFilesList->GetItemCount() == 0) {
 		wxMessageBox("Please specify input files.", "Invalid input");
 		return;
 	}
 
-	wxString outputFilePath = Join::outputFilePathCtrl->GetValue();
+	wxString outputFilePath = Join::outputFilePathCtrl->textCtrl->GetValue();
 	if (outputFilePath == wxEmptyString) {
 		wxMessageBox("Please specify output file.", "Invalid output");
 		return;
