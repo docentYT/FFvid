@@ -12,7 +12,6 @@
 
 MainFrame::MainFrame()
 	: wxFrame(nullptr, wxID_ANY, "FFvid", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE ^ wxRESIZE_BORDER) {
-	//wxPanel* panel = new wxPanel(this);
 	wxNotebook* notebook = new wxNotebook(this, wxID_ANY);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -30,6 +29,7 @@ MainFrame::MainFrame()
 
 	this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::onClose, this);
 
+	//CreateStatusBar();
 	SetMinSize(GetBestSize());
 	SetMaxSize(GetBestSize());
 	SetSize(GetBestSize());

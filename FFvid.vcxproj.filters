@@ -15,39 +15,53 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp">
+    <ClCompile Include="src\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainFrame.cpp">
+    <ClCompile Include="src\MainFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\Trim\Trim.cpp">
+    <ClCompile Include="src\Modules\Trim\Trim.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\Join\Join.cpp">
+    <ClCompile Include="src\Modules\Join\Join.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App.h">
+    <ClInclude Include="src\App.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="MainFrame.h">
+    <ClInclude Include="src\MainFrame.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\Trim\Trim.h">
+    <ClInclude Include="src\Modules\Trim\Trim.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\Module.h">
+    <ClInclude Include="src\Modules\Module.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\Join\Join.h">
+    <ClInclude Include="src\Modules\Join\Join.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Controls\FilePath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="main.manifest">
+    <Manifest Include="src\main.manifest">
       <Filter>Source Files</Filter>
     </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="x64\Debug\bit.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\Modules\Join\bit.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="src\Modules\Join\down.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -135,20 +135,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
-    <ClCompile Include="Modules\Join\Join.cpp" />
-    <ClCompile Include="MainFrame.cpp" />
-    <ClCompile Include="Modules\Trim\Trim.cpp" />
+    <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\Modules\Join\Join.cpp" />
+    <ClCompile Include="src\MainFrame.cpp" />
+    <ClCompile Include="src\Modules\Trim\Trim.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App.h" />
-    <ClInclude Include="Modules\Join\Join.h" />
-    <ClInclude Include="MainFrame.h" />
-    <ClInclude Include="Modules\Module.h" />
-    <ClInclude Include="Modules\Trim\Trim.h" />
+    <ClInclude Include="src\App.h" />
+    <ClInclude Include="src\Controls\FilePath.h" />
+    <ClInclude Include="src\Modules\Join\Join.h" />
+    <ClInclude Include="src\MainFrame.h" />
+    <ClInclude Include="src\Modules\Module.h" />
+    <ClInclude Include="src\Modules\Trim\Trim.h" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="main.manifest" />
+    <Manifest Include="src\main.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\Modules\Join\bit.bmp" />
+    <Image Include="src\Modules\Join\down.bmp" />
+    <Image Include="x64\Debug\bit.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

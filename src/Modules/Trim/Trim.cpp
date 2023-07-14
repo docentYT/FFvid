@@ -16,7 +16,7 @@
 #include <wx/filedlg.h>
 #include <wx/log.h>
 
-static const wxString WILDCARD = "Video";
+static const wxString WILDCARD = "Video|*";
 
 wxPanel* Trim::createPanel(wxNotebook* parent) {
 	wxPanel* mainPanel = new wxPanel(parent, wxID_ANY);
@@ -69,18 +69,19 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	wxButton* trimButton = new wxButton(mainPanel, wxID_ANY, "Trim");
 	trimButton->Bind(wxEVT_BUTTON, &Trim::trimVideo, this);
 
-	wxBoxSizer* saveAndExitSizer = new wxBoxSizer(wxHORIZONTAL);
-	saveAndExitSizer->AddStretchSpacer();
-	saveAndExitSizer->Add(progressGauge, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
-	saveAndExitSizer->AddStretchSpacer();
-	saveAndExitSizer->Add(trimButton, 0, wxALL, 10);
-	saveAndExitSizer->AddStretchSpacer();
+	wxBoxSizer* trimSizer = new wxBoxSizer(wxHORIZONTAL);
+	trimSizer->AddStretchSpacer();
+	trimSizer->Add(progressGauge, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
+	trimSizer->AddStretchSpacer();
+	trimSizer->Add(trimButton, 0, wxALL, 10);
+	trimSizer->AddStretchSpacer();
 
 	/* Main sizer setup */
 	mainSizer->Add(inputFilePathSizer);
 	mainSizer->Add(settingsBoxSizer);
 	mainSizer->Add(outputFilePathSizer);
-	mainSizer->Add(saveAndExitSizer, 0, wxLEFT | wxRIGHT, 15);
+	mainSizer->AddStretchSpacer();
+	mainSizer->Add(trimSizer, 0, wxLEFT | wxRIGHT, 15);
 	mainPanel->SetSizerAndFit(mainSizer);
 
 	Trim::panel = mainPanel;
@@ -106,7 +107,7 @@ void Trim::trimVideo(wxCommandEvent& evt) {
 		return;
 	}
 	wxString outputFilePath = Trim::outputFilePathCtrl->GetValue();
-	if (Trim::outputFilePathCtrl->GetValue() == wxEmptyString) {
+	if (outputFilePath == wxEmptyString) {
 		wxMessageBox("Please specify output file.", "Invalid output");
 		return;
 	}
