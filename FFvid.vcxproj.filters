@@ -47,6 +47,9 @@
     <ClInclude Include="src\Controls\FilePathCtrl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Controls\FilesPathsOrderedListView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="src\main.manifest">

@@ -9,6 +9,7 @@
 #include <wx/checkbox.h>
 
 #include "../../Controls/FilePathCtrl.h"
+#include "../../Controls/FilesPathsOrderedListView.h"
 
 class Join : public Module {
 public:
@@ -17,14 +18,10 @@ public:
 	wxPanel* createPanel(wxNotebook* parent);
 
 private:
-	wxListView* inputFilesList;
+	FilesPathsOrderedListView* inputFilesList;
 	wxGauge* progressGauge;
 	wxCheckBox* reencodeCheckBox;
 	FilePathCtrl* outputFilePathCtrl;
 	int draggedIndex;
-	void selectInputFiles(wxCommandEvent& evt);
-	void moveFileUp(wxCommandEvent& evt);
-	void moveFileDown(wxCommandEvent& evt);
-	void removeItem(wxCommandEvent& evt);
 	void joinVideo(wxCommandEvent& evt);
 };

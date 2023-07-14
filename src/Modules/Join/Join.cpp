@@ -15,6 +15,7 @@
 #include <wx/msgdlg.h>
 
 #include "../../Controls/FilePathCtrl.h"
+#include "../../Controls/FilesPathsOrderedListView.h"
 
 static const wxString WILDCARD = "Video|*";
 
@@ -23,40 +24,7 @@ wxPanel* Join::createPanel(wxNotebook* parent) {
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	/* Input files */
-	Join::inputFilesList = new wxListView(mainPanel, wxID_ANY, wxDefaultPosition, wxSize(620, 1));
-	Join::inputFilesList->AppendColumn("File path");
-	Join::inputFilesList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
-
-	// Buttons
-	//add
-	wxButton* inputFilePathButton = new wxButton(mainPanel, wxID_ANY, "Add");
-	inputFilePathButton->Bind(wxEVT_BUTTON, &Join::selectInputFiles, this);
-	//up
-	wxBitmap upArrow;
-	upArrow.LoadFile("up.bmp", wxBITMAP_TYPE_BMP);
-	upArrow.Rescale(upArrow, wxSize(32, 32));
-	wxBitmapButton* moveFileUpButton = new wxBitmapButton(mainPanel, wxID_ANY, upArrow);
-	moveFileUpButton->Bind(wxEVT_BUTTON, &Join::moveFileUp, this);
-	//down
-	wxBitmap downArrow;
-	downArrow.LoadFile("down.bmp", wxBITMAP_TYPE_BMP);
-	downArrow.Rescale(downArrow, wxSize(32, 32));
-	wxBitmapButton* moveFileDownButton = new wxBitmapButton(mainPanel, wxID_ANY, downArrow);
-	moveFileDownButton->Bind(wxEVT_BUTTON, &Join::moveFileDown, this);
-	//remove
-	wxButton* deleteInputFileButton = new wxButton(mainPanel, wxID_ANY, "Remove");
-	deleteInputFileButton->Bind(wxEVT_BUTTON, &Join::removeItem, this);
-
-	// sizer
-	wxBoxSizer* listCtrlButtonsSizer = new wxBoxSizer(wxVERTICAL);
-	listCtrlButtonsSizer->Add(inputFilePathButton, 0, wxALL, 10);
-	listCtrlButtonsSizer->Add(moveFileUpButton, 0, wxALIGN_CENTER_HORIZONTAL);
-	listCtrlButtonsSizer->Add(moveFileDownButton, 0, wxALIGN_CENTER_HORIZONTAL);
-	listCtrlButtonsSizer->Add(deleteInputFileButton, 0, wxALL, 10);
-
-	wxStaticBoxSizer* inputFilesSizer = new wxStaticBoxSizer(wxHORIZONTAL, mainPanel, "List of files to join");
-	inputFilesSizer->Add(Join::inputFilesList, 1, wxEXPAND);
-	inputFilesSizer->Add(listCtrlButtonsSizer);
+	Join::inputFilesList = new FilesPathsOrderedListView(mainPanel, "List of files to join", WILDCARD, wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
 
 	/* Output file */
 	Join::outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
@@ -77,7 +45,7 @@ wxPanel* Join::createPanel(wxNotebook* parent) {
 	joinSizer->AddStretchSpacer();
 
 	/* Main sizer setup */
-	mainSizer->Add(inputFilesSizer);
+	mainSizer->Add(inputFilesList->sizer);
 	mainSizer->Add(outputFilePathCtrl->sizer);
 	mainSizer->AddStretchSpacer();
 	mainSizer->Add(joinSizer, 0, wxLEFT | wxRIGHT, 15);
@@ -87,64 +55,8 @@ wxPanel* Join::createPanel(wxNotebook* parent) {
 	return mainPanel;
 }
 
-void Join::selectInputFiles(wxCommandEvent& evt) {
-	wxFileDialog dialog(Join::panel, wxEmptyString, wxEmptyString, wxEmptyString, "", wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
-	if (dialog.ShowModal() == wxID_CANCEL) return;
-	wxArrayString paths;
-	dialog.GetPaths(paths);
-	wxListItem item;
-	Join::inputFilesList->Freeze();
-	auto previousId = Join::inputFilesList->GetItemCount();
-	for (auto path : paths) {
-		item.SetId(previousId++);
-		item.SetText(path);
-		Join::inputFilesList->InsertItem(item);
-	}
-	Join::inputFilesList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
-	Join::inputFilesList->Thaw();
-}
-
-void Join::moveFileUp(wxCommandEvent& evt) {
-	auto selectedId = Join::inputFilesList->GetFirstSelected();
-	if (selectedId <= 0) return;
-	wxListItem item;
-	Join::inputFilesList->Freeze();
-	item.SetId(selectedId);
-	Join::inputFilesList->GetItem(item);
-	Join::inputFilesList->DeleteItem(selectedId);
-	item.SetId(selectedId - 1);
-	Join::inputFilesList->InsertItem(item);
-	Join::inputFilesList->Select(item, true);
-	Join::inputFilesList->Focus(item);
-	Join::inputFilesList->Thaw();
-}
-
-void Join::moveFileDown(wxCommandEvent& evt) {
-	auto selectedId = Join::inputFilesList->GetFirstSelected();
-	if (selectedId == -1 or selectedId == Join::inputFilesList->GetItemCount() - 1) return;
-	wxListItem item;
-	Join::inputFilesList->Freeze();
-	item.SetId(selectedId);
-	Join::inputFilesList->GetItem(item);
-	Join::inputFilesList->DeleteItem(selectedId);
-	item.SetId(selectedId + 1);
-	Join::inputFilesList->InsertItem(item);
-	Join::inputFilesList->Select(item, true);
-	Join::inputFilesList->Focus(item);
-	Join::inputFilesList->Thaw();
-}
-
-void Join::removeItem(wxCommandEvent& evt) {
-	auto selectedId = Join::inputFilesList->GetFirstSelected();
-	if (selectedId == -1) return;
-	Join::inputFilesList->Freeze();
-	Join::inputFilesList->DeleteItem(selectedId);
-	Join::inputFilesList->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
-	Join::inputFilesList->Thaw();
-}
-
 void Join::joinVideo(wxCommandEvent& evt) {
-	if (Join::inputFilesList->GetItemCount() == 0) {
+	if (Join::inputFilesList->filesListView->GetItemCount() == 0) {
 		wxMessageBox("Please specify input files.", "Invalid input");
 		return;
 	}
@@ -165,8 +77,8 @@ void Join::joinVideo(wxCommandEvent& evt) {
 		const auto concactDemuxer = [this, outputFilePath]() -> std::string {
 			// temp file
 			std::string write = "";
-			for (int i = 0; i < Join::inputFilesList->GetItemCount(); ++i) {
-				write.append(std::format("file '{}'\n", (std::string)Join::inputFilesList->GetItemText(i)));
+			for (int i = 0; i < Join::inputFilesList->filesListView->GetItemCount(); ++i) {
+				write.append(std::format("file '{}'\n", (std::string)Join::inputFilesList->filesListView->GetItemText(i)));
 			};
 			wxString name = wxFileName::CreateTempFileName("FFvid");
 			wxTempFile* temp = new wxTempFile(name);
@@ -178,20 +90,20 @@ void Join::joinVideo(wxCommandEvent& evt) {
 		};
 		const auto concatVideoFilter = [this, outputFilePath]() -> std::string {
 			std::string command = "ffmpeg ";
-			for (int i = 0; i < Join::inputFilesList->GetItemCount(); ++i) {
-				command.append(std::format("-i \"{}\" ", (std::string)Join::inputFilesList->GetItemText(i)));
+			for (int i = 0; i < Join::inputFilesList->filesListView->GetItemCount(); ++i) {
+				command.append(std::format("-i \"{}\" ", (std::string)Join::inputFilesList->filesListView->GetItemText(i)));
 			};
 			command.append("-filter_complex \"");
-			for (int i = 0; i < Join::inputFilesList->GetItemCount(); ++i) {
+			for (int i = 0; i < Join::inputFilesList->filesListView->GetItemCount(); ++i) {
 				command.append(std::format("[{}:v] [{}:a] ", i, i));
 			};
-			command.append(std::format("concat=n={}:v=1:a=1 [v] [a]\" ", Join::inputFilesList->GetItemCount()));
+			command.append(std::format("concat=n={}:v=1:a=1 [v] [a]\" ", Join::inputFilesList->filesListView->GetItemCount()));
 			command.append(std::format("-map \"[v]\" -map \"[a]\" -y \"{}\"", (std::string)outputFilePath));
 			return command;
 		};
 
 		Join::busy = true;
-		Join::inputFilesList->Freeze();
+		Join::inputFilesList->filesListView->Freeze();
 		std::string command = (Join::reencodeCheckBox->IsChecked()) ? concatVideoFilter() : concactDemuxer();
 		if (system(command.c_str())) {
 			Join::progressGauge->SetValue(0);
@@ -201,7 +113,7 @@ void Join::joinVideo(wxCommandEvent& evt) {
 			Join::progressGauge->SetValue(100);
 			wxMessageBox("Joining completed.");
 		}
-		Join::inputFilesList->Thaw();
+		Join::inputFilesList->filesListView->Thaw();
 		Join::busy = false;
 	};
 

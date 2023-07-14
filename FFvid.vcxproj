@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="src\App.h" />
     <ClInclude Include="src\Controls\FilePathCtrl.h" />
+    <ClInclude Include="src\Controls\FilesPathsOrderedListView.h" />
     <ClInclude Include="src\Modules\Join\Join.h" />
     <ClInclude Include="src\MainFrame.h" />
     <ClInclude Include="src\Modules\Module.h" />
