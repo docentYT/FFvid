@@ -28,6 +28,7 @@ MainFrame::MainFrame()
 	notebook->AddPage(joinPanel, "Join");
 
 	this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::onClose, this);
+	this->SetIcon(wxIcon("appicon"));
 
 	//CreateStatusBar();
 	SetMinSize(GetBestSize());

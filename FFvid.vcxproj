@@ -148,15 +148,21 @@
     <ClInclude Include="src\MainFrame.h" />
     <ClInclude Include="src\Modules\Module.h" />
     <ClInclude Include="src\Modules\Trim\Trim.h" />
+    <ClInclude Include="src\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="src\main.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Assets\icon.ico" />
+    <Image Include="src\Assets\icon.ico" />
     <Image Include="src\Modules\Join\bit.bmp" />
-    <Image Include="src\Modules\Join\down.bmp" />
-    <Image Include="src\Modules\Join\up.bmp" />
+    <Image Include="src\Assets\downArrow.bmp" />
+    <Image Include="src\Assets\upArrow.bmp" />
     <Image Include="x64\Debug\bit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

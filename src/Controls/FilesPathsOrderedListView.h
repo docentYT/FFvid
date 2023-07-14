@@ -29,13 +29,13 @@ public:
 		inputFilePathButton->Bind(wxEVT_BUTTON, &FilesPathsOrderedListView::addFiles, this);
 		//up
 		wxBitmap upArrow;
-		upArrow.LoadFile("up.bmp", wxBITMAP_TYPE_BMP);
+		upArrow.LoadFile("upArrow.bmp", wxBITMAP_TYPE_BMP);
 		upArrow.Rescale(upArrow, wxSize(32, 32));
 		wxBitmapButton* moveFileUpButton = new wxBitmapButton(parent, wxID_ANY, upArrow);
 		moveFileUpButton->Bind(wxEVT_BUTTON, &FilesPathsOrderedListView::moveFilesUp, this);
 		//down
 		wxBitmap downArrow;
-		downArrow.LoadFile("down.bmp", wxBITMAP_TYPE_BMP);
+		downArrow.LoadFile("downArrow.bmp", wxBITMAP_TYPE_BMP);
 		downArrow.Rescale(downArrow, wxSize(32, 32));
 		wxBitmapButton* moveFileDownButton = new wxBitmapButton(parent, wxID_ANY, downArrow);
 		moveFileDownButton->Bind(wxEVT_BUTTON, &FilesPathsOrderedListView::moveFilesDown, this);

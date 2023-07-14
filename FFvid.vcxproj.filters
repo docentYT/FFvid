@@ -50,6 +50,9 @@
     <ClInclude Include="src\Controls\FilesPathsOrderedListView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="src\main.manifest">
@@ -63,11 +66,22 @@
     <Image Include="src\Modules\Join\bit.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="src\Modules\Join\down.bmp">
+    <Image Include="src\Assets\downArrow.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="src\Modules\Join\up.bmp">
+    <Image Include="src\Assets\upArrow.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="src\Assets\icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
