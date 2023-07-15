@@ -15,22 +15,22 @@ FilesPathsOrderedListView::FilesPathsOrderedListView(
 	// Buttons
 	//add
 	wxButton* inputFilePathButton = new wxButton(parent, wxID_ANY, "Add");
-	inputFilePathButton->Bind(wxEVT_BUTTON, &addFiles, this);
+	inputFilePathButton->Bind(wxEVT_BUTTON, &FilesPathsOrderedListView::addFiles, this);
 	//up
 	wxBitmap upArrow;
 	upArrow.LoadFile("upArrow.bmp", wxBITMAP_TYPE_BMP);
 	upArrow.Rescale(upArrow, wxSize(32, 32));
 	wxBitmapButton* moveFileUpButton = new wxBitmapButton(parent, wxID_ANY, upArrow);
-	moveFileUpButton->Bind(wxEVT_BUTTON, &moveFilesUp, this);
+	moveFileUpButton->Bind(wxEVT_BUTTON, &FilesPathsOrderedListView::moveFilesUp, this);
 	//down
 	wxBitmap downArrow;
 	downArrow.LoadFile("downArrow.bmp", wxBITMAP_TYPE_BMP);
 	downArrow.Rescale(downArrow, wxSize(32, 32));
 	wxBitmapButton* moveFileDownButton = new wxBitmapButton(parent, wxID_ANY, downArrow);
-	moveFileDownButton->Bind(wxEVT_BUTTON, &moveFilesDown, this);
+	moveFileDownButton->Bind(wxEVT_BUTTON, &FilesPathsOrderedListView::moveFilesDown, this);
 	//remove
 	wxButton* deleteInputFileButton = new wxButton(parent, wxID_ANY, "Remove");
-	deleteInputFileButton->Bind(wxEVT_BUTTON, &removeFiles, this);
+	deleteInputFileButton->Bind(wxEVT_BUTTON, &FilesPathsOrderedListView::removeFiles, this);
 
 	// sizers
 	wxBoxSizer* listCtrlButtonsSizer = new wxBoxSizer(wxVERTICAL);

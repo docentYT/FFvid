@@ -27,7 +27,7 @@ MainFrame::MainFrame()
 	wxPanel* joinPanel = join->createPanel(notebook);
 	notebook->AddPage(joinPanel, "Join");
 
-	this->Bind(wxEVT_CLOSE_WINDOW, &onClose, this);
+	this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::onClose, this);
 	this->SetIcon(wxIcon("appicon"));
 
 	//CreateStatusBar();

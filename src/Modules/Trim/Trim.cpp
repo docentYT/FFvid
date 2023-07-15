@@ -51,7 +51,7 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	/* Progress gague and trim button */
 	progressGauge = new wxGauge(mainPanel, wxID_ANY, 100, wxDefaultPosition, wxSize(600, -1));
 	wxButton* trimButton = new wxButton(mainPanel, wxID_ANY, "Trim");
-	trimButton->Bind(wxEVT_BUTTON, &trimVideo, this);
+	trimButton->Bind(wxEVT_BUTTON, &Trim::trimVideo, this);
 
 	wxBoxSizer* trimSizer = new wxBoxSizer(wxHORIZONTAL);
 	trimSizer->AddStretchSpacer();
