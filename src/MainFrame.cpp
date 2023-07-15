@@ -19,15 +19,15 @@ MainFrame::MainFrame()
 	this->SetSizer(sizer);
 	this->SetBackgroundColour(wxColor("red"));
 
-	MainFrame::trim = new Trim();
+	trim = new Trim();
 	wxPanel* trimPanel = trim->createPanel(notebook);
 	notebook->AddPage(trimPanel, "Trim", true);
 
-	MainFrame::join = new Join();
+	join = new Join();
 	wxPanel* joinPanel = join->createPanel(notebook);
 	notebook->AddPage(joinPanel, "Join");
 
-	this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::onClose, this);
+	this->Bind(wxEVT_CLOSE_WINDOW, &onClose, this);
 	this->SetIcon(wxIcon("appicon"));
 
 	//CreateStatusBar();

@@ -25,13 +25,13 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	/* Input file */
-	Trim::inputFilePathCtrl = new FilePathCtrl(mainPanel, "Input file", WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	inputFilePathCtrl = new FilePathCtrl(mainPanel, "Input file", WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
 	/* Settings */
 	wxStaticText* startTimeLabel = new wxStaticText(mainPanel, wxID_ANY, "Start time (HH:MM:SS):");
-	Trim::startTimeCtrl = new wxTextCtrl(mainPanel, wxID_ANY, "00:00:00");
+	startTimeCtrl = new wxTextCtrl(mainPanel, wxID_ANY, "00:00:00");
 	wxStaticText* endTimeLabel = new wxStaticText(mainPanel, wxID_ANY, "End time (HH:MM:SS):");
-	Trim::endTimeCtrl = new wxTextCtrl(mainPanel, wxID_ANY, "01:00:00");
+	endTimeCtrl = new wxTextCtrl(mainPanel, wxID_ANY, "01:00:00");
 
 	wxStaticBox* settingsBox = new wxStaticBox(mainPanel, wxID_ANY, "Settings");
 	wxStaticBoxSizer* settingsBoxSizer = new wxStaticBoxSizer(settingsBox, wxVERTICAL);
@@ -46,12 +46,12 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	settingsBoxSizer->Add(settingsSizer);
 
 	/* Output file */
-	Trim::outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
+	outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
 
 	/* Progress gague and trim button */
-	Trim::progressGauge = new wxGauge(mainPanel, wxID_ANY, 100, wxDefaultPosition, wxSize(600, -1));
+	progressGauge = new wxGauge(mainPanel, wxID_ANY, 100, wxDefaultPosition, wxSize(600, -1));
 	wxButton* trimButton = new wxButton(mainPanel, wxID_ANY, "Trim");
-	trimButton->Bind(wxEVT_BUTTON, &Trim::trimVideo, this);
+	trimButton->Bind(wxEVT_BUTTON, &trimVideo, this);
 
 	wxBoxSizer* trimSizer = new wxBoxSizer(wxHORIZONTAL);
 	trimSizer->AddStretchSpacer();
@@ -61,30 +61,30 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	trimSizer->AddStretchSpacer();
 
 	/* Main sizer setup */
-	mainSizer->Add(Trim::inputFilePathCtrl->sizer);
+	mainSizer->Add(inputFilePathCtrl->sizer);
 	mainSizer->Add(settingsBoxSizer);
-	mainSizer->Add(Trim::outputFilePathCtrl->sizer);
+	mainSizer->Add(outputFilePathCtrl->sizer);
 	mainSizer->AddStretchSpacer();
 	mainSizer->Add(trimSizer, 0, wxLEFT | wxRIGHT, 15);
 	mainPanel->SetSizerAndFit(mainSizer);
 
-	Trim::panel = mainPanel;
+	panel = mainPanel;
 	return mainPanel;
 }
 
 void Trim::trimVideo(wxCommandEvent& evt) {
-	wxString inputFilePath = Trim::inputFilePathCtrl->textCtrl->GetValue();
+	wxString inputFilePath = inputFilePathCtrl->textCtrl->GetValue();
 	if (inputFilePath == wxEmptyString) {
 		wxMessageBox("Please specify input file.", "Invalid input");
 		return;
 	}
-	wxString outputFilePath = Trim::outputFilePathCtrl->textCtrl->GetValue();
+	wxString outputFilePath = outputFilePathCtrl->textCtrl->GetValue();
 	if (outputFilePath == wxEmptyString) {
 		wxMessageBox("Please specify output file.", "Invalid output");
 		return;
 	}
 
-	wxString startTime = Trim::startTimeCtrl->GetValue();
+	wxString startTime = startTimeCtrl->GetValue();
 	if (startTime.length() != 8
 		or !isdigit(startTime[0]) or !isdigit(startTime[1])
 		or !isdigit(startTime[3]) or !isdigit(startTime[4])
@@ -94,7 +94,7 @@ void Trim::trimVideo(wxCommandEvent& evt) {
 		return;
 	}
 
-	wxString endTime = Trim::endTimeCtrl->GetValue();
+	wxString endTime = endTimeCtrl->GetValue();
 	if (endTime.length() != 8
 		or !isdigit(endTime[0]) or !isdigit(endTime[1])
 		or !isdigit(endTime[3]) or !isdigit(endTime[4])
@@ -110,20 +110,20 @@ void Trim::trimVideo(wxCommandEvent& evt) {
 	getTimeFromString(endTime, endH, endM, endS);
 
 	const auto f = [this, startTime, endTime, inputFilePath, outputFilePath]() {
-		Trim::busy = true;
+		busy = true;
 		std::string command = std::format("ffmpeg -ss {} -to {} -i \"{}\" -c copy -y \"{}\"", (std::string)startTime, (std::string)endTime, (std::string)inputFilePath, (std::string)outputFilePath);
 		if (system(command.c_str())) {
-			Trim::progressGauge->SetValue(0);
+			progressGauge->SetValue(0);
 			wxMessageBox("Error!");
 		}
 		else {
-			Trim::progressGauge->SetValue(100);
+			progressGauge->SetValue(100);
 			wxMessageBox("Trimming completed.");
 		}
-		Trim::busy = false;
+		busy = false;
 	};
 	std::thread ffmpegThread{f};
-	Trim::progressGauge->Pulse();
+	progressGauge->Pulse();
 	ffmpegThread.detach();
 }
 

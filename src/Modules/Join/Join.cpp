@@ -24,16 +24,16 @@ wxPanel* Join::createPanel(wxNotebook* parent) {
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	/* Input files */
-	Join::inputFilesList = new FilesPathsOrderedListView(mainPanel, "List of files to join", WILDCARD, wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
+	inputFilesList = new FilesPathsOrderedListView(mainPanel, "List of files to join", WILDCARD, wxFD_OPEN | wxFD_MULTIPLE | wxFD_FILE_MUST_EXIST);
 
 	/* Output file */
-	Join::outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
+	outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
 
 	/* Progress gague and join button */
-	Join::progressGauge = new wxGauge(mainPanel, wxID_ANY, 100, wxDefaultPosition, wxSize(300, -1));
-	Join::reencodeCheckBox = new wxCheckBox(mainPanel, wxID_ANY, "re-encode (slow)\n(if files don't have the same parameters)", wxDefaultPosition, wxSize(300, -1));
+	progressGauge = new wxGauge(mainPanel, wxID_ANY, 100, wxDefaultPosition, wxSize(300, -1));
+	reencodeCheckBox = new wxCheckBox(mainPanel, wxID_ANY, "re-encode (slow)\n(if files don't have the same parameters)", wxDefaultPosition, wxSize(300, -1));
 	wxButton* joinButton = new wxButton(mainPanel, wxID_ANY, "Join");
-	joinButton->Bind(wxEVT_BUTTON, &Join::joinVideo, this);
+	joinButton->Bind(wxEVT_BUTTON, &joinVideo, this);
 
 	wxBoxSizer* joinSizer = new wxBoxSizer(wxHORIZONTAL);
 	joinSizer->AddStretchSpacer();
@@ -51,17 +51,17 @@ wxPanel* Join::createPanel(wxNotebook* parent) {
 	mainSizer->Add(joinSizer, 0, wxLEFT | wxRIGHT, 15);
 	mainPanel->SetSizerAndFit(mainSizer);
 
-	Join::panel = mainPanel;
+	panel = mainPanel;
 	return mainPanel;
 }
 
 void Join::joinVideo(wxCommandEvent& evt) {
-	if (Join::inputFilesList->filesListView->GetItemCount() == 0) {
+	if (inputFilesList->filesListView->GetItemCount() == 0) {
 		wxMessageBox("Please specify input files.", "Invalid input");
 		return;
 	}
 
-	wxString outputFilePath = Join::outputFilePathCtrl->textCtrl->GetValue();
+	wxString outputFilePath = outputFilePathCtrl->textCtrl->GetValue();
 	if (outputFilePath == wxEmptyString) {
 		wxMessageBox("Please specify output file.", "Invalid output");
 		return;
@@ -77,8 +77,8 @@ void Join::joinVideo(wxCommandEvent& evt) {
 		const auto concactDemuxer = [this, outputFilePath]() -> std::string {
 			// temp file
 			std::string write = "";
-			for (int i = 0; i < Join::inputFilesList->filesListView->GetItemCount(); ++i) {
-				write.append(std::format("file '{}'\n", (std::string)Join::inputFilesList->filesListView->GetItemText(i)));
+			for (int i = 0; i < inputFilesList->filesListView->GetItemCount(); ++i) {
+				write.append(std::format("file '{}'\n", (std::string)inputFilesList->filesListView->GetItemText(i)));
 			};
 			wxString name = wxFileName::CreateTempFileName("FFvid");
 			wxTempFile* temp = new wxTempFile(name);
@@ -90,34 +90,34 @@ void Join::joinVideo(wxCommandEvent& evt) {
 		};
 		const auto concatVideoFilter = [this, outputFilePath]() -> std::string {
 			std::string command = "ffmpeg ";
-			for (int i = 0; i < Join::inputFilesList->filesListView->GetItemCount(); ++i) {
-				command.append(std::format("-i \"{}\" ", (std::string)Join::inputFilesList->filesListView->GetItemText(i)));
+			for (int i = 0; i < inputFilesList->filesListView->GetItemCount(); ++i) {
+				command.append(std::format("-i \"{}\" ", (std::string)inputFilesList->filesListView->GetItemText(i)));
 			};
 			command.append("-filter_complex \"");
-			for (int i = 0; i < Join::inputFilesList->filesListView->GetItemCount(); ++i) {
+			for (int i = 0; i < inputFilesList->filesListView->GetItemCount(); ++i) {
 				command.append(std::format("[{}:v] [{}:a] ", i, i));
 			};
-			command.append(std::format("concat=n={}:v=1:a=1 [v] [a]\" ", Join::inputFilesList->filesListView->GetItemCount()));
+			command.append(std::format("concat=n={}:v=1:a=1 [v] [a]\" ", inputFilesList->filesListView->GetItemCount()));
 			command.append(std::format("-map \"[v]\" -map \"[a]\" -y \"{}\"", (std::string)outputFilePath));
 			return command;
 		};
 
-		Join::busy = true;
-		Join::inputFilesList->filesListView->Freeze();
-		std::string command = (Join::reencodeCheckBox->IsChecked()) ? concatVideoFilter() : concactDemuxer();
+		busy = true;
+		inputFilesList->filesListView->Freeze();
+		std::string command = (reencodeCheckBox->IsChecked()) ? concatVideoFilter() : concactDemuxer();
 		if (system(command.c_str())) {
-			Join::progressGauge->SetValue(0);
+			progressGauge->SetValue(0);
 			wxMessageBox("Error!");
 		}
 		else {
-			Join::progressGauge->SetValue(100);
+			progressGauge->SetValue(100);
 			wxMessageBox("Joining completed.");
 		}
-		Join::inputFilesList->filesListView->Thaw();
-		Join::busy = false;
+		inputFilesList->filesListView->Thaw();
+		busy = false;
 	};
 
 	std::thread ffmpegThread{f};
-	Join::progressGauge->Pulse();
+	progressGauge->Pulse();
 	ffmpegThread.detach();
 }

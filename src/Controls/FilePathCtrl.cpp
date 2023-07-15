@@ -4,8 +4,8 @@ FilePathCtrl::FilePathCtrl(wxWindow* parent, const wxString& staticBoxTitle, con
 	parent(parent),
 	textCtrl(new wxTextCtrl(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(600, -1))),
 	sizer(new wxStaticBoxSizer(wxHORIZONTAL, parent, staticBoxTitle)) {
-	FilePathCtrl::wildcard = wildcard;
-	FilePathCtrl::dialogStyle = dialogStyle;
+	this->wildcard = wildcard;
+	this->dialogStyle = dialogStyle;
 	wxButton* outputFilePathButton = new wxButton(parent, wxID_ANY, "Browse");
 	outputFilePathButton->Bind(wxEVT_BUTTON, &FilePathCtrl::selectFile, this);
 
@@ -19,5 +19,5 @@ FilePathCtrl::FilePathCtrl(wxWindow* parent, const wxString& staticBoxTitle, con
 void FilePathCtrl::selectFile(wxCommandEvent& evt) {
 	wxFileDialog dialog(parent, wxEmptyString, wxEmptyString, wxEmptyString, wildcard, dialogStyle);
 	if (dialog.ShowModal() == wxID_CANCEL) return;
-	FilePathCtrl::textCtrl->SetValue(dialog.GetPath());
+	textCtrl->SetValue(dialog.GetPath());
 }
