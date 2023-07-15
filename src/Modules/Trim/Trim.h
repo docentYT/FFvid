@@ -9,7 +9,7 @@ class Trim : public Module {
 public:
 	wxPanel* panel;
 	std::atomic<bool> busy{ false };
-	wxPanel* createPanel(wxNotebook* parent);
+	wxPanel* createPanel(wxNotebook* parent) override;
 
 private:
 	FilePathCtrl* inputFilePathCtrl;
