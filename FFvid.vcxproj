@@ -136,6 +136,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\Controls\FilePathCtrl.cpp" />
+    <ClCompile Include="src\Controls\FilesPathsOrderedListView.cpp" />
     <ClCompile Include="src\Modules\Join\Join.cpp" />
     <ClCompile Include="src\MainFrame.cpp" />
     <ClCompile Include="src\Modules\Trim\Trim.cpp" />
@@ -154,7 +156,6 @@
     <Manifest Include="src\main.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\icon.ico" />
     <Image Include="src\Assets\icon.ico" />
     <Image Include="src\Modules\Join\bit.bmp" />
     <Image Include="src\Assets\downArrow.bmp" />

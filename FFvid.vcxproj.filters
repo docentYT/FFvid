@@ -27,6 +27,12 @@
     <ClCompile Include="src\Modules\Join\Join.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Controls\FilePathCtrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Controls\FilesPathsOrderedListView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\App.h">
@@ -73,9 +79,6 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="src\Assets\icon.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Assets\icon.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
