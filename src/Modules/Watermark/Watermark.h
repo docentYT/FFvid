@@ -1,6 +1,9 @@
 #pragma once
 
 #include "../Module.h"
+
+#include <wx/spinctrl.h>
+
 #include "../../Controls/FilePathCtrl.h"
 #include "../../Controls/ProcessBar.h"
 
