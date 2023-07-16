@@ -138,19 +138,23 @@
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\Controls\FilePathCtrl.cpp" />
     <ClCompile Include="src\Controls\FilesPathsOrderedListView.cpp" />
+    <ClCompile Include="src\Controls\ProcessBar.cpp" />
     <ClCompile Include="src\Modules\Join\Join.cpp" />
     <ClCompile Include="src\MainFrame.cpp" />
     <ClCompile Include="src\Modules\Trim\Trim.cpp" />
+    <ClCompile Include="src\Modules\Watermark\Watermark.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\App.h" />
     <ClInclude Include="src\Controls\FilePathCtrl.h" />
     <ClInclude Include="src\Controls\FilesPathsOrderedListView.h" />
+    <ClInclude Include="src\Controls\ProcessBar.h" />
     <ClInclude Include="src\Modules\Join\Join.h" />
     <ClInclude Include="src\MainFrame.h" />
     <ClInclude Include="src\Modules\Module.h" />
     <ClInclude Include="src\Modules\Trim\Trim.h" />
     <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\Modules\Watermark\Watermark.h" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="src\main.manifest" />

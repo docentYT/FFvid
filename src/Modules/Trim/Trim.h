@@ -4,6 +4,7 @@
 #include <wx/gauge.h>
 #include "../Module.h"
 #include "../../Controls/FilePathCtrl.h"
+#include "../../Controls/ProcessBar.h"
 
 class Trim : public Module {
 public:
@@ -16,7 +17,7 @@ private:
 	FilePathCtrl* outputFilePathCtrl;
 	wxTextCtrl* startTimeCtrl;
 	wxTextCtrl* endTimeCtrl;
-	wxGauge* progressGauge;
+	ProcessBar* processBar;
 	void trimVideo(wxCommandEvent& evt);
 	void getTimeFromString(wxString& string, int& h, int& m, int& s);
 };

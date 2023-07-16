@@ -17,6 +17,7 @@
 #include <wx/log.h>
 
 #include "../../Controls/FilePathCtrl.h"
+#include "../../Controls/ProcessBar.h"
 
 static const wxString WILDCARD = "Video|*";
 
@@ -49,23 +50,15 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
 
 	/* Progress gague and trim button */
-	progressGauge = new wxGauge(mainPanel, wxID_ANY, 100, wxDefaultPosition, wxSize(600, -1));
-	wxButton* trimButton = new wxButton(mainPanel, wxID_ANY, "Trim");
-	trimButton->Bind(wxEVT_BUTTON, &Trim::trimVideo, this);
-
-	wxBoxSizer* trimSizer = new wxBoxSizer(wxHORIZONTAL);
-	trimSizer->AddStretchSpacer();
-	trimSizer->Add(progressGauge, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
-	trimSizer->AddStretchSpacer();
-	trimSizer->Add(trimButton, 0, wxALL, 10);
-	trimSizer->AddStretchSpacer();
+	processBar = new ProcessBar(mainPanel, "Trim", wxSize(600, -1));
+	processBar->button->Bind(wxEVT_BUTTON, &Trim::trimVideo, this);
 
 	/* Main sizer setup */
 	mainSizer->Add(inputFilePathCtrl->sizer);
 	mainSizer->Add(settingsBoxSizer);
 	mainSizer->Add(outputFilePathCtrl->sizer);
 	mainSizer->AddStretchSpacer();
-	mainSizer->Add(trimSizer, 0, wxLEFT | wxRIGHT, 15);
+	mainSizer->Add(processBar->sizer, 0, wxLEFT | wxRIGHT, 15);
 	mainPanel->SetSizerAndFit(mainSizer);
 
 	panel = mainPanel;
@@ -113,17 +106,17 @@ void Trim::trimVideo(wxCommandEvent& evt) {
 		busy = true;
 		std::string command = std::format("ffmpeg -ss {} -to {} -i \"{}\" -c copy -y \"{}\"", (std::string)startTime, (std::string)endTime, (std::string)inputFilePath, (std::string)outputFilePath);
 		if (system(command.c_str())) {
-			progressGauge->SetValue(0);
+			processBar->progressGauge->SetValue(0);
 			wxMessageBox("Error!");
 		}
 		else {
-			progressGauge->SetValue(100);
+			processBar->progressGauge->SetValue(100);
 			wxMessageBox("Trimming completed.");
 		}
 		busy = false;
 	};
 	std::thread ffmpegThread{f};
-	progressGauge->Pulse();
+	processBar->progressGauge->Pulse();
 	ffmpegThread.detach();
 }
 

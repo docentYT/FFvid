@@ -1,6 +1,7 @@
 #include "MainFrame.h"
 #include "Modules/Trim/Trim.h"
 #include "Modules/Join/Join.h"
+#include "Modules/Watermark/Watermark.h"
 
 #include <wx/frame.h>
 #include <wx/panel.h>
@@ -27,6 +28,10 @@ MainFrame::MainFrame()
 	wxPanel* joinPanel = join->createPanel(notebook);
 	notebook->AddPage(joinPanel, "Join");
 
+	watermark = new Watermark();
+	wxPanel* watermarkPanel = watermark->createPanel(notebook);
+	notebook->AddPage(watermarkPanel, "Watermark");
+
 	this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::onClose, this);
 	this->SetIcon(wxIcon("appicon"));
 
@@ -37,7 +42,7 @@ MainFrame::MainFrame()
 }
 
 void MainFrame::onClose(wxCloseEvent& e) {
-	if (trim->busy) {
+	if (trim->busy or join->busy or watermark->busy) {
 		e.Veto();
 		wxMessageBox("FFmpeg is working! Please wait or stop ffmpeg first.");
 		return;
