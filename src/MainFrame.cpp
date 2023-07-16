@@ -13,6 +13,11 @@
 
 MainFrame::MainFrame()
 	: wxFrame(nullptr, wxID_ANY, "FFvid", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE ^ wxRESIZE_BORDER ^ wxMAXIMIZE_BOX) {
+	if (system("ffmpeg -version")) {
+		wxMessageBox("Please install ffmpeg! https://ffmpeg.org");
+		this->Destroy();
+	}
+	
 	wxNotebook* notebook = new wxNotebook(this, wxID_ANY);
 
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
