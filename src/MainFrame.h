@@ -1,8 +1,8 @@
 #pragma once
 #include <wx/frame.h>
-#include "modules/Trim/Trim.h"
-#include "modules/Join/Join.h"
-#include "modules/Watermark/Watermark.h"
+#include "Modules/Trim/Trim.h"
+#include "Modules/Join/Join.h"
+#include "Modules/Watermark/Watermark.h"
 
 class MainFrame : public wxFrame {
 public:
