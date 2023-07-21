@@ -7,9 +7,9 @@ No re-encoding where possible is the fastest possible option for editing videos.
 
 ## 🖥️ Native feel
 Using the C++ language and the multi-platform wxWidgets library generates a fast and clean application that launches in the blink of an eye.
-| Windows 11 |
-|---|
-| <img src="Screenshots/Windows.png" alt="Windows 11" width="512"/> |
+| Windows 11 | GTK 3 |
+|---|---|
+| <img src="Screenshots/Windows.png" alt="Windows 11" width="512"/> | <img src="Screenshots/GTK3.png" alt="GTK 3" width="512"/> |
 
 ## ✨ Functions
 `FFvid` currently offers:
