@@ -12,8 +12,9 @@ public:
 	wxGauge* const progressGauge;
 	wxButton* const button;
 	
-	ProcessBar(wxWindow* parent, const wxString& buttonText, wxSize progressGaugeSize);
+	ProcessBar(wxWindow* parent, const wxString& buttonText);
 
 private:
 	wxWindow* const parent;
+	wxBoxSizer* const gaugeSizer;
 };

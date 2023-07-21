@@ -33,27 +33,29 @@ wxPanel* Join::createPanel(wxNotebook* parent) {
 	outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
 
 	/* Progress gague and join button */
-	progressGauge = new wxGauge(mainPanel, wxID_ANY, 100, wxDefaultPosition, mainPanel->FromDIP(wxSize(260, -1)));
-	wxString checkBoxText = "re-encode (slow)\n(if files don't have the same parameters)";
-	wxSize checkBoxSize = wxSize(mainPanel->GetTextExtent("(if files don't have the same parameters)").x*1.1, -1);
-	reencodeCheckBox = new wxCheckBox(mainPanel, wxID_ANY, checkBoxText, wxDefaultPosition, checkBoxSize);
+	progressGauge = new wxGauge(mainPanel, wxID_ANY, 100);
+	reencodeCheckBox = new wxCheckBox(mainPanel, wxID_ANY, "re-encode (slow)\n(if files don't have the same parameters)");
 	wxButton* joinButton = new wxButton(mainPanel, wxID_ANY, "Join");
 	joinButton->Bind(wxEVT_BUTTON, &Join::joinVideo, this);
 
 	wxBoxSizer* joinSizer = new wxBoxSizer(wxHORIZONTAL);
-	joinSizer->AddStretchSpacer();
-	joinSizer->Add(progressGauge, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
-	joinSizer->AddStretchSpacer();
+	wxBoxSizer* gaugeSizer = new wxBoxSizer(wxVERTICAL);
+	gaugeSizer->Add(progressGauge, 1, wxEXPAND);
+#ifdef _WIN32
+	joinSizer->Add(gaugeSizer, 1, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 10);
 	joinSizer->Add(reencodeCheckBox, 0, wxALIGN_CENTER_VERTICAL);
-	joinSizer->AddStretchSpacer();
-	joinSizer->Add(joinButton, 0, wxALL, 10);
-	joinSizer->AddStretchSpacer();
+	joinSizer->Add(joinButton, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, 10);
+#else
+	joinSizer->Add(gaugeSizer, 1, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+	joinSizer->Add(reencodeCheckBox, 0, wxALIGN_CENTER_VERTICAL);
+	joinSizer->Add(joinButton, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxBOTTOM, 10);
+#endif
 
 	/* Main sizer setup */
-	mainSizer->Add(inputFilesList->sizer);
-	mainSizer->Add(outputFilePathCtrl->sizer);
+	mainSizer->Add(inputFilesList->sizer, 0, wxEXPAND);
+	mainSizer->Add(outputFilePathCtrl->sizer, 0, wxEXPAND);
 	mainSizer->AddStretchSpacer();
-	mainSizer->Add(joinSizer, 0, wxLEFT | wxRIGHT, 15);
+	mainSizer->Add(joinSizer, 0, wxEXPAND);
 	mainPanel->SetSizerAndFit(mainSizer);
 
 	panel = mainPanel;

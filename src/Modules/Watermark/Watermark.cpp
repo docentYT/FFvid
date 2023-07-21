@@ -22,7 +22,7 @@ wxPanel* Watermark::createPanel(wxNotebook* parent) {
 	inputVideoFile = new FilePathCtrl(mainPanel, "Input video file", VIDEO_WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	watermarkFile = new FilePathCtrl(mainPanel, "Watermark file", IMAGE_WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	outputFile = new FilePathCtrl(mainPanel, "Output file", VIDEO_WILDCARD, wxFD_SAVE);
-	processBar = new ProcessBar(mainPanel, "Add watermark", mainPanel->FromDIP(wxSize(475, -1)));
+	processBar = new ProcessBar(mainPanel, "Add watermark");
 	processBar->button->Bind(wxEVT_BUTTON, &Watermark::addWatermark, this);
 
 	/* Settings */
@@ -36,18 +36,18 @@ wxPanel* Watermark::createPanel(wxNotebook* parent) {
 	wxFlexGridSizer* settingsSizer = new wxFlexGridSizer(1, 2, 10, 20);
 	settingsSizer->AddGrowableCol(1);
 	settingsSizer->AddGrowableRow(0);
-	settingsSizer->Add(transparencyLabel, 0, wxALIGN_CENTER_VERTICAL);
-	settingsSizer->Add(transparencyCtrl, 0);
+	settingsSizer->Add(transparencyLabel, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
+	settingsSizer->Add(transparencyCtrl, 0, wxALL, 5);
 	this->transparencyCtrl = transparencyCtrl;
 
 	settingsBoxSizer->Add(settingsSizer);
 
-	mainSizer->Add(inputVideoFile->sizer);
-	mainSizer->Add(watermarkFile->sizer);
+	mainSizer->Add(inputVideoFile->sizer, 0, wxEXPAND);
+	mainSizer->Add(watermarkFile->sizer, 0, wxEXPAND);
 	mainSizer->Add(settingsBoxSizer);
-	mainSizer->Add(outputFile->sizer);
+	mainSizer->Add(outputFile->sizer, 0, wxEXPAND);
 	mainSizer->AddStretchSpacer();
-	mainSizer->Add(processBar->sizer, 0, wxLEFT | wxRIGHT, 15);
+	mainSizer->Add(processBar->sizer, 0, wxEXPAND);
 	mainPanel->SetSizerAndFit(mainSizer);
 
 	panel = mainPanel;

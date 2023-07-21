@@ -3,7 +3,7 @@
 FilesPathsOrderedListView::FilesPathsOrderedListView(
 	wxWindow* parent, const wxString& staticBoxTitle, const wxString& wildcard, const long dialogStyle) :
 	parent(parent),
-	filesListView(new wxListView(parent, wxID_ANY, wxDefaultPosition, parent->FromDIP(wxSize(515, 1)))),
+	filesListView(new wxListView(parent, wxID_ANY)),
 	sizer(new wxStaticBoxSizer(wxHORIZONTAL, parent, staticBoxTitle)) {
 	this->wildcard = wildcard;
 	this->dialogStyle = dialogStyle;
@@ -34,13 +34,17 @@ FilesPathsOrderedListView::FilesPathsOrderedListView(
 
 	// sizers
 	wxBoxSizer* listCtrlButtonsSizer = new wxBoxSizer(wxVERTICAL);
-	listCtrlButtonsSizer->Add(inputFilePathButton, 0, wxALL, 10);
+	listCtrlButtonsSizer->Add(inputFilePathButton, 0, wxBOTTOM, 10);
 	listCtrlButtonsSizer->Add(moveFileUpButton, 0, wxALIGN_CENTER_HORIZONTAL);
 	listCtrlButtonsSizer->Add(moveFileDownButton, 0, wxALIGN_CENTER_HORIZONTAL);
-	listCtrlButtonsSizer->Add(deleteInputFileButton, 0, wxALL, 10);
+	listCtrlButtonsSizer->Add(deleteInputFileButton, 0, wxTOP, 10);
 
-	sizer->Add(filesListView, 1, wxEXPAND);
-	sizer->Add(listCtrlButtonsSizer);
+	sizer->Add(filesListView, 1, wxEXPAND | wxRIGHT, 10);
+#ifdef _WIN32
+	sizer->Add(listCtrlButtonsSizer, 0, wxALIGN_CENTER_VERTICAL);
+#else
+	sizer->Add(listCtrlButtonsSizer, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
+#endif
 }
 
 void FilesPathsOrderedListView::addFiles(wxCommandEvent& evt) {

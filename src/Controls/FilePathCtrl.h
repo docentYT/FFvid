@@ -15,5 +15,6 @@ private:
 	wxWindow* const parent;
 	wxString wildcard;
 	long dialogStyle;
+	wxBoxSizer* const textCtrlSizer;
 	void selectFile(wxCommandEvent& evt);
 };

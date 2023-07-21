@@ -41,8 +41,11 @@ MainFrame::MainFrame()
 #ifdef _WIN32
 	this->SetIcon(wxIcon("appicon"));
 #endif
-	//CreateStatusBar();
+
 	auto bestSize = GetBestSize();
+#ifndef _WIN32
+	bestSize.SetHeight(bestSize.GetY() + 100);
+#endif
 	SetMinSize(bestSize);
 	SetMaxSize(bestSize);
 	SetSize(bestSize);

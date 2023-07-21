@@ -2,18 +2,22 @@
 
 FilePathCtrl::FilePathCtrl(wxWindow* parent, const wxString& staticBoxTitle, const wxString& wildcard, const long dialogStyle) :
 	parent(parent),
-	textCtrl(new wxTextCtrl(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, parent->FromDIP(wxSize(500, -1)))),
+	textCtrl(new wxTextCtrl(parent, wxID_ANY, wxEmptyString)),
+	textCtrlSizer(new wxBoxSizer(wxVERTICAL)),
 	sizer(new wxStaticBoxSizer(wxHORIZONTAL, parent, staticBoxTitle)) {
 	this->wildcard = wildcard;
 	this->dialogStyle = dialogStyle;
 	wxButton* outputFilePathButton = new wxButton(parent, wxID_ANY, "Browse");
 	outputFilePathButton->Bind(wxEVT_BUTTON, &FilePathCtrl::selectFile, this);
 
-	sizer->AddStretchSpacer();
-	sizer->Add(textCtrl, 0, wxALIGN_CENTER_VERTICAL | wxALL, 10);
-	sizer->AddStretchSpacer();
-	sizer->Add(outputFilePathButton, 0, wxALL, 10);
-	sizer->AddStretchSpacer();
+	textCtrlSizer->Add(textCtrl, 1, wxEXPAND);
+#ifdef _WIN32
+	sizer->Add(textCtrlSizer, 1, wxALIGN_CENTER_VERTICAL | wxRIGHT, 10);
+	sizer->Add(outputFilePathButton, 0, wxALIGN_CENTER_VERTICAL);
+#else
+	sizer->Add(textCtrlSizer, 1, wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM | wxRIGHT, 10);
+	sizer->Add(outputFilePathButton, 0, wxALIGN_CENTER_VERTICAL | wxBOTTOM | wxRIGHT, 10);
+#endif
 }
 
 void FilePathCtrl::selectFile(wxCommandEvent& evt) {

@@ -40,10 +40,17 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	wxFlexGridSizer* settingsSizer = new wxFlexGridSizer(2, 2, 10, 20);
 	settingsSizer->AddGrowableCol(1);
 	settingsSizer->AddGrowableRow(0);
+#ifdef _WIN32
 	settingsSizer->Add(startTimeLabel, 0, wxALIGN_CENTER_VERTICAL);
 	settingsSizer->Add(startTimeCtrl, 0);
 	settingsSizer->Add(endTimeLabel, 0, wxALIGN_CENTER_VERTICAL);
 	settingsSizer->Add(endTimeCtrl, 0);
+#else
+	settingsSizer->Add(startTimeLabel, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 10);
+	settingsSizer->Add(startTimeCtrl, 0, wxRIGHT, 10);
+	settingsSizer->Add(endTimeLabel, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM, 10);
+	settingsSizer->Add(endTimeCtrl, 0, wxRIGHT | wxBOTTOM, 10);
+#endif
 
 	settingsBoxSizer->Add(settingsSizer);
 
@@ -51,15 +58,15 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
 
 	/* Progress gague and trim button */
-	processBar = new ProcessBar(mainPanel, "Trim", mainPanel->FromDIP(wxSize(500, -1)));
+	processBar = new ProcessBar(mainPanel, "Trim");
 	processBar->button->Bind(wxEVT_BUTTON, &Trim::trimVideo, this);
 
 	/* Main sizer setup */
-	mainSizer->Add(inputFilePathCtrl->sizer);
+	mainSizer->Add(inputFilePathCtrl->sizer, 0, wxEXPAND);
 	mainSizer->Add(settingsBoxSizer);
-	mainSizer->Add(outputFilePathCtrl->sizer);
+	mainSizer->Add(outputFilePathCtrl->sizer, 0, wxEXPAND);
 	mainSizer->AddStretchSpacer();
-	mainSizer->Add(processBar->sizer, 0, wxLEFT | wxRIGHT, 15);
+	mainSizer->Add(processBar->sizer, 0, wxEXPAND);
 	mainPanel->SetSizerAndFit(mainSizer);
 
 	panel = mainPanel;
