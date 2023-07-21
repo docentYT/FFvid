@@ -10,7 +10,6 @@ wxIMPLEMENT_APP(App);
 
 bool App::OnInit() {
 	MainFrame* mainFrame = new MainFrame();
-	mainFrame->SetClientSize(800, 200);
 	mainFrame->Center();
 	mainFrame->Show();
 

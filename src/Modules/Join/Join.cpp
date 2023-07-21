@@ -1,5 +1,7 @@
 #include "Join.h"
 
+#include <thread>
+
 #include <wx/panel.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -9,10 +11,11 @@
 #include <wx/filedlg.h>
 #include <wx/checkbox.h>
 
-#include <format>
 #include <wx/file.h>
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
+
+#include "../../Format.h"
 
 #include "../../Controls/FilePathCtrl.h"
 #include "../../Controls/FilesPathsOrderedListView.h"
@@ -78,7 +81,7 @@ void Join::joinVideo(wxCommandEvent& evt) {
 			// temp file
 			std::string write = "";
 			for (int i = 0; i < inputFilesList->filesListView->GetItemCount(); ++i) {
-				write.append(std::format("file '{}'\n", (std::string)inputFilesList->filesListView->GetItemText(i)));
+				write.append(FORMAT("file '{}'\n", (std::string)inputFilesList->filesListView->GetItemText(i)));
 			};
 			wxString name = wxFileName::CreateTempFileName("FFvid");
 			wxTempFile* temp = new wxTempFile(name);
@@ -86,19 +89,19 @@ void Join::joinVideo(wxCommandEvent& evt) {
 			temp->Commit();
 			temp->Flush();
 
-			return std::format("ffmpeg -f concat -safe 0 -i \"{}\" -c copy -y \"{}\"", (std::string)name, (std::string)outputFilePath);
+			return FORMAT("ffmpeg -f concat -safe 0 -i \"{}\" -c copy -y \"{}\"", (std::string)name, (std::string)outputFilePath);
 		};
 		const auto concatVideoFilter = [this, outputFilePath]() -> std::string {
 			std::string command = "ffmpeg ";
 			for (int i = 0; i < inputFilesList->filesListView->GetItemCount(); ++i) {
-				command.append(std::format("-i \"{}\" ", (std::string)inputFilesList->filesListView->GetItemText(i)));
+				command.append(FORMAT("-i \"{}\" ", (std::string)inputFilesList->filesListView->GetItemText(i)));
 			};
 			command.append("-filter_complex \"");
 			for (int i = 0; i < inputFilesList->filesListView->GetItemCount(); ++i) {
-				command.append(std::format("[{}:v] [{}:a] ", i, i));
+				command.append(FORMAT("[{}:v] [{}:a] ", i, i));
 			};
-			command.append(std::format("concat=n={}:v=1:a=1 [v] [a]\" ", inputFilesList->filesListView->GetItemCount()));
-			command.append(std::format("-map \"[v]\" -map \"[a]\" -y \"{}\"", (std::string)outputFilePath));
+			command.append(FORMAT("concat=n={}:v=1:a=1 [v] [a]\" ", inputFilesList->filesListView->GetItemCount()));
+			command.append(FORMAT("-map \"[v]\" -map \"[a]\" -y \"{}\"", (std::string)outputFilePath));
 			return command;
 		};
 

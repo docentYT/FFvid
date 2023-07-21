@@ -1,8 +1,9 @@
 #pragma once
 
+#include <atomic>
+
 #include <wx/panel.h>
 #include <wx/notebook.h>
-#include <wx/textctrl.h> // for std::atomic without C4996 error
 
 class Module {
 public:

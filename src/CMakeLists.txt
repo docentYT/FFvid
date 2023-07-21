@@ -5,10 +5,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(FFvid)
 
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
+if (NOT WIN32)
+    find_package(fmt)
+endif()
 
 include(${wxWidgets_USE_FILE})
 
-set(SOURCES App.cpp MainFrame.cpp Modules/Join/Join.cpp Modules/Trim/Trim.cpp Modules/Watermark/Watermark.cpp Controls/FilePathCtrl.cpp Controls/FilesPathsOrderedListView.cpp Controls/ProcessBar.cpp)
+set(SOURCES App.cpp MainFrame.cpp Modules/Join/Join.cpp Modules/Trim/Trim.cpp Modules/Watermark/Watermark.cpp Controls/FilePathCtrl.cpp Controls/FilesPathsOrderedListView.cpp Controls/ProcessBar.cpp Format.h)
 
 if (WIN32)
     add_executable(FFvid WIN32 ${SOURCES} main.manifest resource.rc resource.h resource.aps)
@@ -26,4 +29,8 @@ add_custom_command(TARGET FFvid POST_BUILD
         "${PROJECT_SOURCE_DIR}/Assets/downArrow.bmp"
         $<TARGET_FILE_DIR:FFvid>)
 
-target_link_libraries(FFvid PRIVATE ${wxWidgets_LIBRARIES})
+if (WIN32)
+    target_link_libraries(FFvid PRIVATE ${wxWidgets_LIBRARIES})
+else()
+    target_link_libraries(FFvid PRIVATE ${wxWidgets_LIBRARIES} fmt::fmt)
+endif()

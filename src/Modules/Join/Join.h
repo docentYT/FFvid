@@ -1,9 +1,11 @@
 #pragma once
+
 #include "../Module.h"
+
+#include <atomic>
 
 #include <wx/panel.h>
 #include <wx/notebook.h>
-#include <wx/textctrl.h> // for std::atomic without C4996 error
 #include <wx/listctrl.h>
 #include <wx/gauge.h>
 #include <wx/checkbox.h>

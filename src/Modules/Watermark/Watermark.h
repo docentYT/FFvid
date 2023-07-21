@@ -2,6 +2,7 @@
 
 #include "../Module.h"
 
+#include <atomic>
 #include <wx/spinctrl.h>
 
 #include "../../Controls/FilePathCtrl.h"

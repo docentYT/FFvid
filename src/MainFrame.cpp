@@ -23,7 +23,6 @@ MainFrame::MainFrame()
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(notebook, 1, wxEXPAND);
 	this->SetSizer(sizer);
-	this->SetBackgroundColour(wxColor("red"));
 
 	trim = new Trim();
 	wxPanel* trimPanel = trim->createPanel(notebook);
@@ -38,8 +37,10 @@ MainFrame::MainFrame()
 	notebook->AddPage(watermarkPanel, "Watermark");
 
 	this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::onClose, this);
-	this->SetIcon(wxIcon("appicon"));
 
+#ifdef _WIN32
+	this->SetIcon(wxIcon("appicon"));
+#endif
 	//CreateStatusBar();
 	SetMinSize(GetBestSize());
 	SetMaxSize(GetBestSize());

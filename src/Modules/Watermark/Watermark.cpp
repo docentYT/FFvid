@@ -1,13 +1,16 @@
 #include "Watermark.h"
 
-#include "../../Controls/FilePathCtrl.h"
-#include "../../Controls/ProcessBar.h"
+#include <thread>
 
 #include <wx/stattext.h>
 #include <wx/spinctrl.h>
 #include <wx/statbox.h>
 #include <wx/msgdlg.h>
-#include <format>
+
+#include "../../Format.h"
+
+#include "../../Controls/FilePathCtrl.h"
+#include "../../Controls/ProcessBar.h"
 
 static const wxString VIDEO_WILDCARD = "Video|*";
 static const wxString IMAGE_WILDCARD = "Image|*";
@@ -25,8 +28,7 @@ wxPanel* Watermark::createPanel(wxNotebook* parent) {
 	/* Settings */
 	wxStaticText* transparencyLabel = new wxStaticText(mainPanel, wxID_ANY, "Transparency:");
 	wxSpinCtrl* transparencyCtrl = new wxSpinCtrl(mainPanel, wxID_ANY);
-	transparencyCtrl->SetMin(0);
-	transparencyCtrl->SetMax(100);
+	transparencyCtrl->SetRange(0, 100);
 	transparencyCtrl->SetValue(50);
 
 	wxStaticBox* settingsBox = new wxStaticBox(mainPanel, wxID_ANY, "Settings");
@@ -74,7 +76,7 @@ void Watermark::addWatermark(wxCommandEvent& evt) {
 	std::string transparency = std::to_string(transparencyCtrl->GetValue()/100.0);
 	const auto f = [this, inputVideoFilePath, inputWatermarkFilePath, transparency, outputFilePath]() {
 		busy = true;
-		std::string command = std::format("ffmpeg -i \"{}\" -i \"{}\" -filter_complex \"[1]format = rgba, colorchannelmixer = aa = {}[logo]; [0] [logo] overlay = (W - w) / 2:(H - h) / 2 : format = auto, format = yuv420p\" -c:a copy -y \"{}\"", (std::string)inputVideoFilePath, (std::string)inputWatermarkFilePath, transparency, (std::string)outputFilePath);
+		std::string command = FORMAT("ffmpeg -i \"{}\" -i \"{}\" -filter_complex \"[1]format = rgba, colorchannelmixer = aa = {}[logo]; [0] [logo] overlay = (W - w) / 2:(H - h) / 2 : format = auto, format = yuv420p\" -c:a copy -y \"{}\"", (std::string)inputVideoFilePath, (std::string)inputWatermarkFilePath, transparency, (std::string)outputFilePath);
 		if (system(command.c_str())) {
 			processBar->progressGauge->SetValue(0);
 			wxMessageBox("Error!");

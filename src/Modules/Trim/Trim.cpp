@@ -1,6 +1,5 @@
 #include "Trim.h" 
 
-#include <format>
 #include <thread>
 
 #include <wx/notebook.h>
@@ -15,6 +14,8 @@
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
 #include <wx/log.h>
+
+#include "../../Format.h"
 
 #include "../../Controls/FilePathCtrl.h"
 #include "../../Controls/ProcessBar.h"
@@ -104,7 +105,7 @@ void Trim::trimVideo(wxCommandEvent& evt) {
 
 	const auto f = [this, startTime, endTime, inputFilePath, outputFilePath]() {
 		busy = true;
-		std::string command = std::format("ffmpeg -ss {} -to {} -i \"{}\" -c copy -y \"{}\"", (std::string)startTime, (std::string)endTime, (std::string)inputFilePath, (std::string)outputFilePath);
+		std::string command = FORMAT("ffmpeg -ss {} -to {} -i \"{}\" -c copy -y \"{}\"", (std::string)startTime, (std::string)endTime, (std::string)inputFilePath, (std::string)outputFilePath);
 		if (system(command.c_str())) {
 			processBar->progressGauge->SetValue(0);
 			wxMessageBox("Error!");

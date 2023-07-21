@@ -20,7 +20,7 @@ Using the C++ language and the multi-platform wxWidgets library generates a fast
 ## 🚀 How to install
 
 ### Compile from source
-You will need [CMake](https://cmake.org) and [wxWidgets](https://www.wxwidgets.org) installed. To build the project in debug configuration use:
+You will need [CMake](https://cmake.org) and [wxWidgets](https://www.wxwidgets.org) installed. On systems other than Windows, the [fmt](https://fmt.dev) library is also needed. To build the project in debug configuration use:
 ```
 cmake -S. -Bbuild
 cmake --build build

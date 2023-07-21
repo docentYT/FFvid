@@ -1,8 +1,13 @@
 #pragma once
+
+#include "../Module.h"
+
+#include <atomic>
+
 #include <wx/panel.h>
 #include <wx/textctrl.h>
 #include <wx/gauge.h>
-#include "../Module.h"
+
 #include "../../Controls/FilePathCtrl.h"
 #include "../../Controls/ProcessBar.h"
 
