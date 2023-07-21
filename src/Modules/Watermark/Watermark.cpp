@@ -36,8 +36,13 @@ wxPanel* Watermark::createPanel(wxNotebook* parent) {
 	wxFlexGridSizer* settingsSizer = new wxFlexGridSizer(1, 2, 10, 20);
 	settingsSizer->AddGrowableCol(1);
 	settingsSizer->AddGrowableRow(0);
-	settingsSizer->Add(transparencyLabel, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
-	settingsSizer->Add(transparencyCtrl, 0, wxALL, 5);
+#ifdef _WIN32
+	settingsSizer->Add(transparencyLabel);
+	settingsSizer->Add(transparencyCtrl);
+#else
+	settingsSizer->Add(transparencyLabel, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM, 10);
+	settingsSizer->Add(transparencyCtrl, 0, wxRIGHT | wxBOTTOM, 10);
+#endif
 	this->transparencyCtrl = transparencyCtrl;
 
 	settingsBoxSizer->Add(settingsSizer);
