@@ -16,3 +16,18 @@ Using the C++ language and the multi-platform wxWidgets library generates a fast
 - video trimming
 - joining multiple videos into one
 - adding a watermark to a video
+
+## 🚀 How to install
+
+### Compile from source
+You will need [CMake](https://cmake.org) and [wxWidgets](https://www.wxwidgets.org) installed. To build the project in debug configuration use:
+```
+cmake -S. -Bbuild
+cmake --build build
+```
+or if you want to build in release configuration:
+```
+cmake -S. -Bbuild
+cmake --build build --config Release
+```
+The main executable can be found in the `build/out/(Debug or Release)` directory.
