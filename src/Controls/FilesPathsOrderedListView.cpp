@@ -3,7 +3,7 @@
 FilesPathsOrderedListView::FilesPathsOrderedListView(
 	wxWindow* parent, const wxString& staticBoxTitle, const wxString& wildcard, const long dialogStyle) :
 	parent(parent),
-	filesListView(new wxListView(parent, wxID_ANY, wxDefaultPosition, wxSize(620, 1))),
+	filesListView(new wxListView(parent, wxID_ANY, wxDefaultPosition, parent->FromDIP(wxSize(515, 1)))),
 	sizer(new wxStaticBoxSizer(wxHORIZONTAL, parent, staticBoxTitle)) {
 	this->wildcard = wildcard;
 	this->dialogStyle = dialogStyle;

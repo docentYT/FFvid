@@ -22,7 +22,7 @@ wxPanel* Watermark::createPanel(wxNotebook* parent) {
 	inputVideoFile = new FilePathCtrl(mainPanel, "Input video file", VIDEO_WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	watermarkFile = new FilePathCtrl(mainPanel, "Watermark file", IMAGE_WILDCARD, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	outputFile = new FilePathCtrl(mainPanel, "Output file", VIDEO_WILDCARD, wxFD_SAVE);
-	processBar = new ProcessBar(mainPanel, "Add watermark", wxSize(565, -1));
+	processBar = new ProcessBar(mainPanel, "Add watermark", mainPanel->FromDIP(wxSize(475, -1)));
 	processBar->button->Bind(wxEVT_BUTTON, &Watermark::addWatermark, this);
 
 	/* Settings */
@@ -36,7 +36,7 @@ wxPanel* Watermark::createPanel(wxNotebook* parent) {
 	wxFlexGridSizer* settingsSizer = new wxFlexGridSizer(1, 2, 10, 20);
 	settingsSizer->AddGrowableCol(1);
 	settingsSizer->AddGrowableRow(0);
-	settingsSizer->Add(transparencyLabel, 0);
+	settingsSizer->Add(transparencyLabel, 0, wxALIGN_CENTER_VERTICAL);
 	settingsSizer->Add(transparencyCtrl, 0);
 	this->transparencyCtrl = transparencyCtrl;
 

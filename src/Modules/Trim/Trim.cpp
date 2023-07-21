@@ -40,9 +40,9 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	wxFlexGridSizer* settingsSizer = new wxFlexGridSizer(2, 2, 10, 20);
 	settingsSizer->AddGrowableCol(1);
 	settingsSizer->AddGrowableRow(0);
-	settingsSizer->Add(startTimeLabel, 0);
+	settingsSizer->Add(startTimeLabel, 0, wxALIGN_CENTER_VERTICAL);
 	settingsSizer->Add(startTimeCtrl, 0);
-	settingsSizer->Add(endTimeLabel, 0);
+	settingsSizer->Add(endTimeLabel, 0, wxALIGN_CENTER_VERTICAL);
 	settingsSizer->Add(endTimeCtrl, 0);
 
 	settingsBoxSizer->Add(settingsSizer);
@@ -51,7 +51,7 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	outputFilePathCtrl = new FilePathCtrl(mainPanel, "Output file", WILDCARD, wxFD_SAVE);
 
 	/* Progress gague and trim button */
-	processBar = new ProcessBar(mainPanel, "Trim", wxSize(600, -1));
+	processBar = new ProcessBar(mainPanel, "Trim", mainPanel->FromDIP(wxSize(500, -1)));
 	processBar->button->Bind(wxEVT_BUTTON, &Trim::trimVideo, this);
 
 	/* Main sizer setup */

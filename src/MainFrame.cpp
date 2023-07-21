@@ -42,9 +42,10 @@ MainFrame::MainFrame()
 	this->SetIcon(wxIcon("appicon"));
 #endif
 	//CreateStatusBar();
-	SetMinSize(GetBestSize());
-	SetMaxSize(GetBestSize());
-	SetSize(GetBestSize());
+	auto bestSize = GetBestSize();
+	SetMinSize(bestSize);
+	SetMaxSize(bestSize);
+	SetSize(bestSize);
 }
 
 void MainFrame::onClose(wxCloseEvent& e) {
