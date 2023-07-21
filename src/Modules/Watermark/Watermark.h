@@ -17,7 +17,7 @@ public:
 private:
 	FilePathCtrl* inputVideoFile;
 	FilePathCtrl* watermarkFile;
-	wxSpinCtrl* transparencyCtrl;
+	wxSpinCtrl* opacityCtrl;
 	FilePathCtrl* outputFile;
 	ProcessBar* processBar;
 

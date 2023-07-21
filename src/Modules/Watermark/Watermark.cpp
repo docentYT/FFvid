@@ -26,10 +26,10 @@ wxPanel* Watermark::createPanel(wxNotebook* parent) {
 	processBar->button->Bind(wxEVT_BUTTON, &Watermark::addWatermark, this);
 
 	/* Settings */
-	wxStaticText* transparencyLabel = new wxStaticText(mainPanel, wxID_ANY, "Transparency:");
-	wxSpinCtrl* transparencyCtrl = new wxSpinCtrl(mainPanel, wxID_ANY);
-	transparencyCtrl->SetRange(0, 100);
-	transparencyCtrl->SetValue(50);
+	wxStaticText* opacityLabel = new wxStaticText(mainPanel, wxID_ANY, "Opacity:");
+	wxSpinCtrl* opacityCtrl = new wxSpinCtrl(mainPanel, wxID_ANY);
+	opacityCtrl->SetRange(0, 100);
+	opacityCtrl->SetValue(50);
 
 	wxStaticBox* settingsBox = new wxStaticBox(mainPanel, wxID_ANY, "Settings");
 	wxStaticBoxSizer* settingsBoxSizer = new wxStaticBoxSizer(settingsBox, wxVERTICAL);
@@ -37,13 +37,13 @@ wxPanel* Watermark::createPanel(wxNotebook* parent) {
 	settingsSizer->AddGrowableCol(1);
 	settingsSizer->AddGrowableRow(0);
 #ifdef _WIN32
-	settingsSizer->Add(transparencyLabel);
-	settingsSizer->Add(transparencyCtrl);
+	settingsSizer->Add(opacityLabel);
+	settingsSizer->Add(opacityCtrl);
 #else
-	settingsSizer->Add(transparencyLabel, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM, 10);
-	settingsSizer->Add(transparencyCtrl, 0, wxRIGHT | wxBOTTOM, 10);
+	settingsSizer->Add(opacityLabel, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM, 10);
+	settingsSizer->Add(opacityCtrl, 0, wxRIGHT | wxBOTTOM, 10);
 #endif
-	this->transparencyCtrl = transparencyCtrl;
+	this->opacityCtrl = opacityCtrl;
 
 	settingsBoxSizer->Add(settingsSizer);
 
@@ -78,7 +78,7 @@ void Watermark::addWatermark(wxCommandEvent& evt) {
 		return;
 	}
 
-	std::string transparency = std::to_string(transparencyCtrl->GetValue()/100.0);
+	std::string transparency = std::to_string(opacityCtrl->GetValue()/100.0);
 	const auto f = [this, inputVideoFilePath, inputWatermarkFilePath, transparency, outputFilePath]() {
 		busy = true;
 		std::string command = FORMAT("ffmpeg -i \"{}\" -i \"{}\" -filter_complex \"[1]format = rgba, colorchannelmixer = aa = {}[logo]; [0] [logo] overlay = (W - w) / 2:(H - h) / 2 : format = auto, format = yuv420p\" -c:a copy -y \"{}\"", (std::string)inputVideoFilePath, (std::string)inputWatermarkFilePath, transparency, (std::string)outputFilePath);
