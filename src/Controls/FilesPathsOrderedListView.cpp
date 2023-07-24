@@ -72,6 +72,7 @@ void FilesPathsOrderedListView::moveFilesUp(wxCommandEvent& evt) {
 	while ((itemIndex = filesListView->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) != -1) {
 		if (itemIndex <= 0) break;
 		item.SetId(itemIndex);
+		item.SetMask(wxLIST_MASK_TEXT); // On Windows not nessesary
 		filesListView->GetItem(item);
 		filesListView->DeleteItem(itemIndex);
 		item.SetId(itemIndex - 1);
@@ -83,12 +84,16 @@ void FilesPathsOrderedListView::moveFilesUp(wxCommandEvent& evt) {
 	filesListView->Thaw();
 }
 
-void FilesPathsOrderedListView::moveFilesDown(wxCommandEvent & evt) {
+void FilesPathsOrderedListView::moveFilesDown(wxCommandEvent& evt) {
 	filesListView->Freeze();
 
 	wxArrayInt selectedItems;
+#ifdef _WIN32 // there is a bug on wxGTK with GetSelectedItemCount()
 	int selectedItemCount = filesListView->GetSelectedItemCount();
 	selectedItems.Alloc(selectedItemCount);
+#else
+	int selectedItemCount = 0;
+#endif
 	long itemIndex = -1;
 	while ((itemIndex = filesListView->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) != -1) {
 		if (itemIndex == filesListView->GetItemCount() - 1) {
@@ -96,11 +101,15 @@ void FilesPathsOrderedListView::moveFilesDown(wxCommandEvent & evt) {
 			return;
 		}
 		selectedItems.Add(itemIndex);
+#ifndef _WIN32
+		++selectedItemCount;
+#endif
 	}
 	wxListItem item;
 	for (int i = selectedItemCount - 1; i >= 0; i--) {
 		int selectedIndex = selectedItems[i];
 		item.SetId(selectedIndex);
+		item.SetMask(wxLIST_MASK_TEXT); // On Windows not nessesary
 		filesListView->GetItem(item);
 		filesListView->DeleteItem(selectedIndex);
 		item.SetId(selectedIndex + 1);
@@ -116,14 +125,22 @@ void FilesPathsOrderedListView::removeFiles(wxCommandEvent& evt) {
 	filesListView->Freeze();
 
 	wxArrayInt selectedItems;
+#ifdef _WIN32 // there is a bug on wxGTK with GetSelectedItemCount()
 	int selectedItemCount = filesListView->GetSelectedItemCount();
 	selectedItems.Alloc(selectedItemCount);
+#else
+	int selectedItemCount = 0;
+#endif
 	long itemIndex = -1;
 	while ((itemIndex = filesListView->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) != -1) {
 		selectedItems.Add(itemIndex);
+#ifndef _WIN32
+		++selectedItemCount;
+#endif
 	}
 	for (int i = selectedItemCount - 1; i >= 0; i--) {
 		int selectedIndex = selectedItems[i];
+		filesListView->Select(selectedIndex, false); // On Windows not nessesary. Without this line on linux you will get assert error in vector.
 		filesListView->DeleteItem(selectedIndex);
 	}
 

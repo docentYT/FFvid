@@ -4,6 +4,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(FFvid)
 
+set(CPACK_GENERATOR NSIS)
+set(CPACK_PACKAGE_NAME "FFvid")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Fast and easy-to-use video editor based on FFmpeg.")
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
+set(CPACK_PACKAGE_EXECUTABLES "FFvid" "FFvid")
+include(CPack)
+
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 if (NOT WIN32)
     find_package(fmt)
@@ -34,3 +43,6 @@ if (WIN32)
 else()
     target_link_libraries(FFvid PRIVATE ${wxWidgets_LIBRARIES} fmt::fmt)
 endif()
+
+install(TARGETS FFvid RUNTIME COMPONENT applications DESTINATION "bin")
+install(FILES "${PROJECT_SOURCE_DIR}/Assets/upArrow.bmp" "${PROJECT_SOURCE_DIR}/Assets/downArrow.bmp" DESTINATION "bin")

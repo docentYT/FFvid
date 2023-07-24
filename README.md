@@ -19,6 +19,9 @@ Using the C++ language and the multi-platform wxWidgets library generates a fast
 
 ## 🚀 How to install
 
+### Windows
+A simple installer has been prepared for Windows users and is available on the [Releases page](https://github.com/docentYT/FFvid/releases).
+
 ### Compile from source
 You will need [CMake](https://cmake.org) and [wxWidgets](https://www.wxwidgets.org) installed. On systems other than Windows, the [fmt](https://fmt.dev) library is also needed. To build the project in debug configuration use:
 ```
@@ -31,3 +34,5 @@ cmake -S. -Bbuild
 cmake --build build --config Release
 ```
 The main executable can be found in the `build/out/(Debug or Release)` directory.
+
+To create an installer for Windows use `cpack -C Release` in `build` directory.
