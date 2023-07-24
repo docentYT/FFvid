@@ -1,4 +1,4 @@
-<h1 align="center">FFvid</h1>
+<h1 align="center"><img src='https://raw.githubusercontent.com/docentYT/FFvid/main/src/Assets/icons/icon.svg' width='128'/></h1>
 
 > Fast and easy-to-use video editor based on [FFmpeg](https://ffmpeg.org). Cross-platform, native GUI allows you to get the performance of pure FFmpeg without having to remember commands.
 
