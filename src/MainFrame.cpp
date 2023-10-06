@@ -57,7 +57,7 @@ MainFrame::MainFrame()
 }
 
 void MainFrame::onClose(wxCloseEvent& e) {
-	if (trim->busy or join->busy or watermark->busy) {
+	if (trim->busy or join->busy or watermark->busy or removeData->busy) {
 		e.Veto();
 		wxMessageBox("FFmpeg is working! Please wait or stop ffmpeg first.");
 		return;
