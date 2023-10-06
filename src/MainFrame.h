@@ -3,6 +3,7 @@
 #include "Modules/Trim/Trim.h"
 #include "Modules/Join/Join.h"
 #include "Modules/Watermark/Watermark.h"
+#include "Modules/RemoveData/RemoveData.h"
 
 class MainFrame : public wxFrame {
 public:
@@ -11,5 +12,6 @@ private:
 	Trim* trim;
 	Join* join;
 	Watermark* watermark;
+	RemoveData* removeData;
 	void onClose(wxCloseEvent& e);
 };

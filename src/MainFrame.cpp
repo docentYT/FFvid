@@ -2,6 +2,7 @@
 #include "Modules/Trim/Trim.h"
 #include "Modules/Join/Join.h"
 #include "Modules/Watermark/Watermark.h"
+#include "Modules/RemoveData/RemoveData.h"
 
 #include <wx/frame.h>
 #include <wx/panel.h>
@@ -35,6 +36,10 @@ MainFrame::MainFrame()
 	watermark = new Watermark();
 	wxPanel* watermarkPanel = watermark->createPanel(notebook);
 	notebook->AddPage(watermarkPanel, "Watermark");
+
+	removeData = new RemoveData();
+	wxPanel* removeDataPanel = removeData->createPanel(notebook);
+	notebook->AddPage(removeDataPanel, "Remove data");
 
 	this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::onClose, this);
 
