@@ -23,4 +23,3 @@ private:
 
 	void addWatermark(wxCommandEvent& evt);
 };
-
