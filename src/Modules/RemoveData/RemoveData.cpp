@@ -61,7 +61,6 @@ wxPanel* RemoveData::createPanel(wxNotebook* parent) {
 	mainSizer->Add(processBar->sizer, 0, wxEXPAND);
 	mainPanel->SetSizerAndFit(mainSizer);
 
-	panel = mainPanel;
 	return mainPanel;
 }
 
@@ -89,7 +88,7 @@ void RemoveData::removeData(wxCommandEvent& evt) {
 	}
 
 	const auto f = [this, inputVideoFilePath, params, outputFilePath]() {
-		busy = true;
+		Module::busy = true;
 		std::string command = FORMAT("ffmpeg -i \"{}\" -c copy {}\"{}\"", (std::string)inputVideoFilePath, params, (std::string)outputFilePath);
 		if (system(command.c_str())) {
 			processBar->progressGauge->SetValue(0);
@@ -99,7 +98,7 @@ void RemoveData::removeData(wxCommandEvent& evt) {
 			processBar->progressGauge->SetValue(100);
 			wxMessageBox("Deleting data completed.");
 		}
-		busy = false;
+		Module::busy = false;
 		};
 	std::thread ffmpegThread{ f };
 	processBar->progressGauge->Pulse();

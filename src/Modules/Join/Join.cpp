@@ -58,7 +58,6 @@ wxPanel* Join::createPanel(wxNotebook* parent) {
 	mainSizer->Add(joinSizer, 0, wxEXPAND);
 	mainPanel->SetSizerAndFit(mainSizer);
 
-	panel = mainPanel;
 	return mainPanel;
 }
 
@@ -109,7 +108,7 @@ void Join::joinVideo(wxCommandEvent& evt) {
 			return command;
 		};
 
-		busy = true;
+		Module::busy = true;
 		inputFilesList->filesListView->Freeze();
 		std::string command = (reencodeCheckBox->IsChecked()) ? concatVideoFilter() : concactDemuxer();
 		if (system(command.c_str())) {
@@ -121,7 +120,7 @@ void Join::joinVideo(wxCommandEvent& evt) {
 			wxMessageBox("Joining completed.");
 		}
 		inputFilesList->filesListView->Thaw();
-		busy = false;
+		Module::busy = false;
 	};
 
 	std::thread ffmpegThread{f};

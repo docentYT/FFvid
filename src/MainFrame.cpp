@@ -13,7 +13,14 @@
 #include <wx/msgdlg.h>
 
 MainFrame::MainFrame()
-	: wxFrame(nullptr, wxID_ANY, "FFvid", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE ^ wxRESIZE_BORDER ^ wxMAXIMIZE_BOX) {
+	: wxFrame(nullptr, wxID_ANY, "FFvid", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE^ wxRESIZE_BORDER^ wxMAXIMIZE_BOX)
+	, modules{ 
+		new Trim(_("Trim")),
+		new Join(_("Join")),
+		new Watermark(_("Watermark")),
+		new RemoveData(_("Remove data"))
+	}
+{
 	if (system("ffmpeg -version")) {
 		wxMessageBox("Please install ffmpeg! https://ffmpeg.org");
 		this->Destroy();
@@ -25,21 +32,10 @@ MainFrame::MainFrame()
 	sizer->Add(notebook, 1, wxEXPAND);
 	this->SetSizer(sizer);
 
-	trim = new Trim();
-	wxPanel* trimPanel = trim->createPanel(notebook);
-	notebook->AddPage(trimPanel, "Trim", true);
-
-	join = new Join();
-	wxPanel* joinPanel = join->createPanel(notebook);
-	notebook->AddPage(joinPanel, "Join");
-
-	watermark = new Watermark();
-	wxPanel* watermarkPanel = watermark->createPanel(notebook);
-	notebook->AddPage(watermarkPanel, "Watermark");
-
-	removeData = new RemoveData();
-	wxPanel* removeDataPanel = removeData->createPanel(notebook);
-	notebook->AddPage(removeDataPanel, "Remove data");
+	for (auto& m : this->modules) {
+		wxPanel* panel = m->createPanel(notebook);
+		notebook->AddPage(panel, m->name);
+	}
 
 	this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::onClose, this);
 
@@ -57,12 +53,12 @@ MainFrame::MainFrame()
 }
 
 void MainFrame::onClose(wxCloseEvent& e) {
-	if (trim->busy or join->busy or watermark->busy or removeData->busy) {
-		e.Veto();
-		wxMessageBox("FFmpeg is working! Please wait or stop ffmpeg first.");
-		return;
+	for (auto& m : this->modules) {
+		if (m->busy) {
+			e.Veto();
+			wxMessageBox("FFmpeg is working! Please wait or stop ffmpeg first.");
+			return;
+		}
 	}
-	else {
-		this->Destroy();
-	}
+	this->Destroy();
 }

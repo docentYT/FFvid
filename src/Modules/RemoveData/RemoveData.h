@@ -2,7 +2,6 @@
 
 #include "../Module.h"
 
-#include <atomic>
 #include <wx/checkbox.h>
 
 #include "../../Controls/FilePathCtrl.h"
@@ -10,9 +9,9 @@
 
 class RemoveData : public Module {
 public:
-	wxPanel* panel;
-	std::atomic<bool> busy{ false };
 	wxPanel* createPanel(wxNotebook* parent) override;
+
+	using Module::Module;
 
 private:
 	FilePathCtrl* inputVideoFile;

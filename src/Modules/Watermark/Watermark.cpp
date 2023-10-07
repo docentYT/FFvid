@@ -2,6 +2,7 @@
 
 #include <thread>
 
+#include <wx/panel.h>
 #include <wx/stattext.h>
 #include <wx/spinctrl.h>
 #include <wx/statbox.h>
@@ -55,7 +56,6 @@ wxPanel* Watermark::createPanel(wxNotebook* parent) {
 	mainSizer->Add(processBar->sizer, 0, wxEXPAND);
 	mainPanel->SetSizerAndFit(mainSizer);
 
-	panel = mainPanel;
 	return mainPanel;
 }
 
@@ -80,7 +80,7 @@ void Watermark::addWatermark(wxCommandEvent& evt) {
 
 	std::string transparency = std::to_string(opacityCtrl->GetValue()/100.0);
 	const auto f = [this, inputVideoFilePath, inputWatermarkFilePath, transparency, outputFilePath]() {
-		busy = true;
+		Module::busy = true;
 		std::string command = FORMAT("ffmpeg -i \"{}\" -i \"{}\" -filter_complex \"[1]format = rgba, colorchannelmixer = aa = {}[logo]; [0] [logo] overlay = (W - w) / 2:(H - h) / 2 : format = auto, format = yuv420p\" -c:a copy -y \"{}\"", (std::string)inputVideoFilePath, (std::string)inputWatermarkFilePath, transparency, (std::string)outputFilePath);
 		if (system(command.c_str())) {
 			processBar->progressGauge->SetValue(0);
@@ -90,7 +90,7 @@ void Watermark::addWatermark(wxCommandEvent& evt) {
 			processBar->progressGauge->SetValue(100);
 			wxMessageBox("Adding watermark completed.");
 		}
-		busy = false;
+		Module::busy = false;
 	};
 	std::thread ffmpegThread{f};
 	processBar->progressGauge->Pulse();

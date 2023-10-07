@@ -2,9 +2,6 @@
 
 #include "../Module.h"
 
-#include <atomic>
-
-#include <wx/panel.h>
 #include <wx/textctrl.h>
 #include <wx/gauge.h>
 
@@ -13,9 +10,9 @@
 
 class Trim : public Module {
 public:
-	wxPanel* panel;
-	std::atomic<bool> busy{ false };
 	wxPanel* createPanel(wxNotebook* parent) override;
+
+	using Module::Module;
 
 private:
 	FilePathCtrl* inputFilePathCtrl;

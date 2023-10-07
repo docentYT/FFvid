@@ -69,7 +69,6 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	mainSizer->Add(processBar->sizer, 0, wxEXPAND);
 	mainPanel->SetSizerAndFit(mainSizer);
 
-	panel = mainPanel;
 	return mainPanel;
 }
 
@@ -111,7 +110,7 @@ void Trim::trimVideo(wxCommandEvent& evt) {
 	getTimeFromString(endTime, endH, endM, endS);
 
 	const auto f = [this, startTime, endTime, inputFilePath, outputFilePath]() {
-		busy = true;
+		Module::busy = true;
 		std::string command = FORMAT("ffmpeg -ss {} -to {} -i \"{}\" -c copy -y \"{}\"", (std::string)startTime, (std::string)endTime, (std::string)inputFilePath, (std::string)outputFilePath);
 		if (system(command.c_str())) {
 			processBar->progressGauge->SetValue(0);
@@ -121,7 +120,7 @@ void Trim::trimVideo(wxCommandEvent& evt) {
 			processBar->progressGauge->SetValue(100);
 			wxMessageBox("Trimming completed.");
 		}
-		busy = false;
+		Module::busy = false;
 	};
 	std::thread ffmpegThread{f};
 	processBar->progressGauge->Pulse();
