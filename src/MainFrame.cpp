@@ -1,4 +1,5 @@
 #include "MainFrame.h"
+#include "FFmpeg.h"
 #include "Modules/Trim/Trim.h"
 #include "Modules/Join/Join.h"
 #include "Modules/Watermark/Watermark.h"
@@ -21,7 +22,7 @@ MainFrame::MainFrame()
 		new RemoveData(_("Remove data"))
 	}
 {
-	if (system("ffmpeg -version")) {
+	if (!FFmpeg::GetInstance()->isInstalled()) {
 		wxMessageBox("Please install ffmpeg! https://ffmpeg.org");
 		this->Destroy();
 	}
