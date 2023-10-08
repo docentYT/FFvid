@@ -31,6 +31,11 @@ void FFmpeg::trim(const std::string_view startTime, const std::string_view endTi
 	executeCommand(command, "Trimming completed.", progressGauge);
 }
 
+void FFmpeg::watermark(const std::string_view inputVideoFilePath, const std::string_view inputWatermarkFilePath, const std::string_view transparency, const std::string_view outputFilePath, wxGauge* progressGauge) {
+	const std::string& command = FORMAT("ffmpeg -i \"{}\" -i \"{}\" -filter_complex \"[1]format = rgba, colorchannelmixer = aa = {}[logo]; [0] [logo] overlay = (W - w) / 2:(H - h) / 2 : format = auto, format = yuv420p\" -c:a copy -y \"{}\"", inputVideoFilePath, inputWatermarkFilePath, transparency, outputFilePath);
+	executeCommand(command, "Adding watermark completed.", progressGauge);
+}
+
 void FFmpeg::executeCommand(const std::string command, const std::string successMessage, wxGauge* progressGauge) {
 	startTask(progressGauge);
 	const auto f = [this, command, successMessage, progressGauge] {
