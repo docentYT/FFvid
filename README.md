@@ -16,6 +16,7 @@ Using the C++ language and the multi-platform wxWidgets library generates a fast
 - video trimming
 - joining multiple videos into one
 - adding a watermark to a video
+- removing data (video, audio, subtitles, data streams) from file
 
 ## 🚀 How to install
 

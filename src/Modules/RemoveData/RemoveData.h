@@ -2,12 +2,12 @@
 
 #include "../Module.h"
 
-#include <wx/spinctrl.h>
+#include <wx/checkbox.h>
 
 #include "../../Controls/FilePathCtrl.h"
 #include "../../Controls/ProcessBar.h"
 
-class Watermark : public Module {
+class RemoveData : public Module {
 public:
 	wxPanel* createPanel(wxNotebook* parent) override;
 
@@ -15,10 +15,12 @@ public:
 
 private:
 	FilePathCtrl* inputVideoFile;
-	FilePathCtrl* watermarkFile;
-	wxSpinCtrl* opacityCtrl;
+	wxCheckBox* removeVideoCheckBox;
+	wxCheckBox* removeAudioCheckBox;
+	wxCheckBox* removeSubtitleCheckBox;
+	wxCheckBox* removeDataStreamsCheckBox;
 	FilePathCtrl* outputFile;
 	ProcessBar* processBar;
 
-	void addWatermark(wxCommandEvent& evt);
+	void removeData(wxCommandEvent& evt);
 };

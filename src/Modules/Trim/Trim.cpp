@@ -20,6 +20,8 @@
 #include "../../Controls/FilePathCtrl.h"
 #include "../../Controls/ProcessBar.h"
 
+#include "../../FFmpeg.h"
+
 static const wxString WILDCARD = "Video|*";
 
 wxPanel* Trim::createPanel(wxNotebook* parent) {
@@ -69,7 +71,6 @@ wxPanel* Trim::createPanel(wxNotebook* parent) {
 	mainSizer->Add(processBar->sizer, 0, wxEXPAND);
 	mainPanel->SetSizerAndFit(mainSizer);
 
-	panel = mainPanel;
 	return mainPanel;
 }
 
@@ -110,22 +111,12 @@ void Trim::trimVideo(wxCommandEvent& evt) {
 	int endH, endM, endS;
 	getTimeFromString(endTime, endH, endM, endS);
 
-	const auto f = [this, startTime, endTime, inputFilePath, outputFilePath]() {
-		busy = true;
-		std::string command = FORMAT("ffmpeg -ss {} -to {} -i \"{}\" -c copy -y \"{}\"", (std::string)startTime, (std::string)endTime, (std::string)inputFilePath, (std::string)outputFilePath);
-		if (system(command.c_str())) {
-			processBar->progressGauge->SetValue(0);
-			wxMessageBox("Error!");
-		}
-		else {
-			processBar->progressGauge->SetValue(100);
-			wxMessageBox("Trimming completed.");
-		}
-		busy = false;
-	};
-	std::thread ffmpegThread{f};
-	processBar->progressGauge->Pulse();
-	ffmpegThread.detach();
+	FFmpeg::GetInstance()->trim(
+		(std::string_view)startTime,
+		(std::string_view)endTime,
+		(std::string_view)inputFilePath,
+		(std::string_view)outputFilePath,
+		processBar->progressGauge);
 }
 
 void Trim::getTimeFromString(wxString& string, int& h, int& m, int& s) {

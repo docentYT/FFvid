@@ -1,7 +1,9 @@
 #include "MainFrame.h"
+#include "FFmpeg.h"
 #include "Modules/Trim/Trim.h"
 #include "Modules/Join/Join.h"
 #include "Modules/Watermark/Watermark.h"
+#include "Modules/RemoveData/RemoveData.h"
 
 #include <wx/frame.h>
 #include <wx/panel.h>
@@ -12,8 +14,15 @@
 #include <wx/msgdlg.h>
 
 MainFrame::MainFrame()
-	: wxFrame(nullptr, wxID_ANY, "FFvid", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE ^ wxRESIZE_BORDER ^ wxMAXIMIZE_BOX) {
-	if (system("ffmpeg -version")) {
+	: wxFrame(nullptr, wxID_ANY, "FFvid", wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE^ wxRESIZE_BORDER^ wxMAXIMIZE_BOX)
+	, modules{ 
+		new Trim(_("Trim")),
+		new Join(_("Join")),
+		new Watermark(_("Watermark")),
+		new RemoveData(_("Remove data"))
+	}
+{
+	if (!FFmpeg::GetInstance()->isInstalled()) {
 		wxMessageBox("Please install ffmpeg! https://ffmpeg.org");
 		this->Destroy();
 	}
@@ -24,17 +33,10 @@ MainFrame::MainFrame()
 	sizer->Add(notebook, 1, wxEXPAND);
 	this->SetSizer(sizer);
 
-	trim = new Trim();
-	wxPanel* trimPanel = trim->createPanel(notebook);
-	notebook->AddPage(trimPanel, "Trim", true);
-
-	join = new Join();
-	wxPanel* joinPanel = join->createPanel(notebook);
-	notebook->AddPage(joinPanel, "Join");
-
-	watermark = new Watermark();
-	wxPanel* watermarkPanel = watermark->createPanel(notebook);
-	notebook->AddPage(watermarkPanel, "Watermark");
+	for (auto& m : this->modules) {
+		wxPanel* panel = m->createPanel(notebook);
+		notebook->AddPage(panel, m->name);
+	}
 
 	this->Bind(wxEVT_CLOSE_WINDOW, &MainFrame::onClose, this);
 
@@ -52,12 +54,10 @@ MainFrame::MainFrame()
 }
 
 void MainFrame::onClose(wxCloseEvent& e) {
-	if (trim->busy or join->busy or watermark->busy) {
+	if (FFmpeg::GetInstance()->isBusy()) {
 		e.Veto();
 		wxMessageBox("FFmpeg is working! Please wait or stop ffmpeg first.");
 		return;
 	}
-	else {
-		this->Destroy();
-	}
+	this->Destroy();
 }

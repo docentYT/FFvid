@@ -20,7 +20,7 @@ endif()
 
 include(${wxWidgets_USE_FILE})
 
-set(SOURCES App.cpp MainFrame.cpp Modules/Join/Join.cpp Modules/Trim/Trim.cpp Modules/Watermark/Watermark.cpp Controls/FilePathCtrl.cpp Controls/FilesPathsOrderedListView.cpp Controls/ProcessBar.cpp Format.h)
+set(SOURCES App.cpp MainFrame.cpp Modules/Join/Join.cpp Modules/RemoveData/RemoveData.cpp Modules/Trim/Trim.cpp Modules/Watermark/Watermark.cpp Controls/FilePathCtrl.cpp Controls/FilesPathsOrderedListView.cpp Controls/ProcessBar.cpp Format.h FFmpeg.cpp)
 
 if (WIN32)
     add_executable(FFvid WIN32 ${SOURCES} main.manifest resource.rc resource.h resource.aps)
