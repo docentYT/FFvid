@@ -1,6 +1,5 @@
 #pragma once
 
-#include <atomic>
 #include <string>
 #include <string_view>
 
@@ -8,8 +7,6 @@
 
 class FFmpeg {
 public:
-	std::atomic<bool> busy{ false };
-
 	FFmpeg(FFmpeg& other) = delete;
 	void operator=(const FFmpeg&) = delete;
 	
