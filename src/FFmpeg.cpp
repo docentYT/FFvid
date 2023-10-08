@@ -4,6 +4,8 @@
 #include <thread>
 
 #include <wx/msgdlg.h>
+#include <wx/file.h>
+#include <wx/filename.h>
 
 #include "Format.h"
 
@@ -24,6 +26,36 @@ bool FFmpeg::isInstalled() {
 
 bool FFmpeg::isBusy() {
 	return taskCounter != 0;
+}
+
+void FFmpeg::join(const std::vector<std::string> inputFiles, const std::string_view outputFilePath, bool reencode, wxGauge* progressGauge) {
+	if (reencode) {
+		std::string command = "ffmpeg ";
+		for (const std::string& file : inputFiles) {
+			command.append(FORMAT("-i \"{}\" ", file));
+		}
+		command.append("-filter_complex \"");
+		for (int i = 0; i < inputFiles.size(); i++) {
+			command.append(FORMAT("[{}:v] [{}:a] ", i, i));
+		}
+		command.append(FORMAT("concat=n={}:v=1:a=1 [v] [a]\" ", inputFiles.size()));
+		command.append(FORMAT("-map \"[v]\" -map \"[a]\" -y \"{}\"", (std::string)outputFilePath));
+		executeCommand(command, "Joining completed.", progressGauge);
+	}
+	else {
+		std::string write = "";
+		for (const std::string& file : inputFiles) {
+			write.append(FORMAT("file '{}'\n", file));
+		}
+		wxString name = wxFileName::CreateTempFileName("FFvid");
+		wxTempFile* temp = new wxTempFile(name);
+		temp->Write(write);
+		temp->Commit();
+		temp->Flush();
+
+		const std::string& command = FORMAT("ffmpeg -f concat -safe 0 -i \"{}\" -c copy -y \"{}\"", (std::string_view)name, outputFilePath);
+		executeCommand(command, "Joining completed.", progressGauge);
+	}
 }
 
 void FFmpeg::removeData(const std::string_view inputFilePath, bool removeVideo, bool removeAudio, bool removeSubtitle, bool removeDataStreams, const std::string_view outputFilePath, wxGauge* progressGauge) {

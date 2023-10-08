@@ -15,6 +15,7 @@ public:
 	bool isInstalled();
 	bool isBusy();
 
+	void join(const std::vector<std::string> inputFiles, const std::string_view outputFilePath, bool reencode, wxGauge* progressGauge = nullptr);
 	void removeData(const std::string_view inputFilePath, bool removeVideo, bool removeAudio, bool removeSubtitle, bool removeDataStreams, const std::string_view outputFilePath, wxGauge* progressGauge = nullptr);
 	void trim(const std::string_view startTime, const std::string_view endTime, const std::string_view inputFilePath, const std::string_view outputFilePath, wxGauge* progressGauge = nullptr);
 	void watermark(const std::string_view inputVideoFilePath, const std::string_view inputWatermarkFilePath, const std::string_view transparency, const std::string_view outputFilePath, wxGauge* progressGauge = nullptr);
