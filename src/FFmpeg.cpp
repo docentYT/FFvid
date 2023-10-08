@@ -22,13 +22,17 @@ bool FFmpeg::isInstalled() {
 	return isInstalled;
 }
 
+bool FFmpeg::isBusy() {
+	return taskCounter != 0;
+}
+
 void FFmpeg::trim(const std::string_view startTime, const std::string_view endTime, const std::string_view inputFilePath, const std::string_view outputFilePath, wxGauge* progressGauge) {
 	const std::string& command = FORMAT("ffmpeg -ss {} -to {} -i \"{}\" -c copy -y \"{}\"", startTime, endTime, inputFilePath, outputFilePath);
 	executeCommand(command, "Trimming completed.", progressGauge);
 }
 
 void FFmpeg::executeCommand(const std::string command, const std::string successMessage, wxGauge* progressGauge) {
-	startTask();
+	startTask(progressGauge);
 	const auto f = [this, command, successMessage, progressGauge] {
 		if (system(command.c_str())) {
 			endTask(false, progressGauge);

@@ -54,12 +54,10 @@ MainFrame::MainFrame()
 }
 
 void MainFrame::onClose(wxCloseEvent& e) {
-	for (auto& m : this->modules) {
-		if (m->busy) {
-			e.Veto();
-			wxMessageBox("FFmpeg is working! Please wait or stop ffmpeg first.");
-			return;
-		}
+	if (FFmpeg::GetInstance()->isBusy()) {
+		e.Veto();
+		wxMessageBox("FFmpeg is working! Please wait or stop ffmpeg first.");
+		return;
 	}
 	this->Destroy();
 }

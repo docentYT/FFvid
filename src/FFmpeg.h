@@ -16,6 +16,8 @@ public:
 	static FFmpeg* GetInstance();
 
 	bool isInstalled();
+	bool isBusy();
+
 	void trim(const std::string_view startTime, const std::string_view endTime, const std::string_view inputFilePath, const std::string_view outputFilePath, wxGauge* progressGauge = nullptr);
 
 private:
