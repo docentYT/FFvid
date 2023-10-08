@@ -26,6 +26,20 @@ bool FFmpeg::isBusy() {
 	return taskCounter != 0;
 }
 
+void FFmpeg::removeData(const std::string_view inputFilePath, bool removeVideo, bool removeAudio, bool removeSubtitle, bool removeDataStreams, const std::string_view outputFilePath, wxGauge* progressGauge) {
+	std::string params = "";
+	if (removeVideo) params += "-vn ";
+	if (removeAudio) params += "-an ";
+	if (removeSubtitle) params += "-sn ";
+	if (removeDataStreams) params += "-dn ";
+	if (params == "-vn -an ") {
+		throw "The file must contain at least video or audio.";
+	}
+	
+	const std::string& command = FORMAT("ffmpeg -i \"{}\" -c copy -y {}\"{}\"", inputFilePath, params, outputFilePath);
+	executeCommand(command, "Deleting data completed.", progressGauge);
+}
+
 void FFmpeg::trim(const std::string_view startTime, const std::string_view endTime, const std::string_view inputFilePath, const std::string_view outputFilePath, wxGauge* progressGauge) {
 	const std::string& command = FORMAT("ffmpeg -ss {} -to {} -i \"{}\" -c copy -y \"{}\"", startTime, endTime, inputFilePath, outputFilePath);
 	executeCommand(command, "Trimming completed.", progressGauge);

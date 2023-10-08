@@ -12,6 +12,8 @@
 #include "../../Controls/FilePathCtrl.h"
 #include "../../Controls/ProcessBar.h"
 
+#include "../../FFmpeg.h"
+
 static const wxString VIDEO_WILDCARD = "Video|*";
 static const wxString IMAGE_WILDCARD = "Image|*";
 
@@ -65,8 +67,8 @@ wxPanel* RemoveData::createPanel(wxNotebook* parent) {
 }
 
 void RemoveData::removeData(wxCommandEvent& evt) {
-	wxString inputVideoFilePath = inputVideoFile->textCtrl->GetValue();
-	if (inputVideoFilePath == wxEmptyString) {
+	wxString inputFilePath = inputVideoFile->textCtrl->GetValue();
+	if (inputFilePath == wxEmptyString) {
 		wxMessageBox("Please specify input video file.", "Invalid input");
 		return;
 	}
@@ -77,30 +79,18 @@ void RemoveData::removeData(wxCommandEvent& evt) {
 		return;
 	}
 
-	std::string params;
-	if (removeVideoCheckBox->IsChecked()) params += "-vn ";
-	if (removeAudioCheckBox->IsChecked()) params += "-an ";
-	if (removeSubtitleCheckBox->IsChecked()) params += "-sn ";
-	if (removeDataStreamsCheckBox->IsChecked()) params += "-dn ";
-	if (params == "-vn -an ") {
+	if (removeVideoCheckBox->IsChecked() && removeAudioCheckBox->IsChecked()) {
 		wxMessageBox("The file must contain at least video or audio.", "Invalid options");
 		return;
 	}
 
-	const auto f = [this, inputVideoFilePath, params, outputFilePath]() {
-		Module::busy = true;
-		std::string command = FORMAT("ffmpeg -i \"{}\" -c copy {}\"{}\"", (std::string)inputVideoFilePath, params, (std::string)outputFilePath);
-		if (system(command.c_str())) {
-			processBar->progressGauge->SetValue(0);
-			wxMessageBox("Error!");
-		}
-		else {
-			processBar->progressGauge->SetValue(100);
-			wxMessageBox("Deleting data completed.");
-		}
-		Module::busy = false;
-		};
-	std::thread ffmpegThread{ f };
-	processBar->progressGauge->Pulse();
-	ffmpegThread.detach();
+	FFmpeg::GetInstance()->removeData(
+		(std::string_view)inputFilePath,
+		removeVideoCheckBox->IsChecked(),
+		removeAudioCheckBox->IsChecked(),
+		removeSubtitleCheckBox->IsChecked(),
+		removeDataStreamsCheckBox->IsChecked(),
+		(std::string_view)outputFilePath,
+		processBar->progressGauge
+	);
 }
